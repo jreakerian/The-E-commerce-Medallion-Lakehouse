@@ -3,9 +3,7 @@
 # name or the intended use of these models
 name: 'olist_lakehouse'
 version: '1.0.0'
-
-dbt-cloud:
-    project-id: 70471823487785
+config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
 profile: 'olist_lakehouse_profile'
@@ -23,7 +21,6 @@ snapshot-paths: ["snapshots"]
 clean-targets:         #directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
-
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
