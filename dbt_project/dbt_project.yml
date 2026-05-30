@@ -31,8 +31,10 @@ clean-targets:         #directories to be removed by `dbt clean`
 models:
   olist_lakehouse:
     staging:
+      +schema: analytics_silver
       +materialized: view
     intermediate:
       +materialized: ephemeral # Ephemeral models are CTEs, not stored in the DB
     marts:
+      +schema: analytics_gold     
       +materialized: table
