@@ -4,11 +4,15 @@ This repository demonstrates a production-grade ELT pipeline and Medallion Lakeh
 
 ---
 ## Architectural Overview
-This project is built on a modern Lakehouse Architecture, which combines the cost-effective storage of a data lake with the performance and governance of a data warehouse. Data flows through a Medallion Architecture, ensuring quality and traceability across three distinct layers :
+This project is built on a modern Lakehouse Architecture, which combines the cost-effective storage of a data lake with the performance and governance of a data warehouse. Data flows through a Medallion Architecture, ensuring quality and traceability across three distinct layers:
 
 Bronze Layer: Raw, immutable data is ingested from source systems into an Amazon S3 data lake.
 Silver Layer: Data is cleaned, conformed, and enriched in Snowflake, creating a validated "single source of truth."
 Gold Layer: Data is aggregated into business-specific data marts, modeled as a star schema, and optimized for analytics.
+
+![Architecture Diagram](medalion_architecture.svg)
+---
+
 
 ## 1. The Problem
 Modern e-commerce platforms like Olist generate millions of events across disparate datasets (orders, payments, reviews, and logistics). Decision-makers face three primary hurdles:
