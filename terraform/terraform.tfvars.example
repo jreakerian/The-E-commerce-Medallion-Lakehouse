@@ -1,0 +1,10 @@
+# Terraform variables for the Snowflake storage integration.
+# Copy this file to terraform.tfvars and fill in your values.
+# NEVER commit terraform.tfvars to version control.
+
+snowflake_storage_integration_arn = "<snowflake-iam-user-arn-from-DESCRIBE-INTEGRATION>"
+snowflake_external_id             = "<external-id-from-DESCRIBE-INTEGRATION>"
+
+# Optional overrides (defaults are set in variables.tf):
+# aws_region     = "us-east-2"
+# s3_bucket_name = "project-ecommerce-lakehouse"
