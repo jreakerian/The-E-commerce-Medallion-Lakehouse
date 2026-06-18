@@ -137,6 +137,7 @@ Ensure you have the following tools installed:
 This project provides a solid foundation that can be extended with more advanced features:
 
 *   **Incremental Models**: Convert the `fct_orders` model to an incremental model to optimize performance and reduce costs on subsequent runs.
+- [x] **Incremental Models**: Transitioned `fct_orders` to dbt Microbatch incremental strategy.
 *   **CI/CD Integration**: Use dbt Cloud's built-in CI/CD features or GitHub Actions to automatically test and deploy changes on pull requests.
 *   **Advanced Data Quality**: Incorporate packages like `dbt-expectations` for more comprehensive and expressive data quality testing.
 *   **Data Visualization**: Connect a BI tool like Tableau to the Gold layer tables in Snowflake to build an executive dashboard.
