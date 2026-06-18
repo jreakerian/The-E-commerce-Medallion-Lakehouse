@@ -15,6 +15,10 @@ renamed as (
         seller_state::varchar as seller_state
 
     from source
+    qualify row_number() over (
+        partition by seller_id
+        order by seller_id
+    ) = 1
 
 )
 

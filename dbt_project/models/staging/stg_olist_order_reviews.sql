@@ -18,6 +18,10 @@ renamed as (
         review_answer_timestamp::timestamp_ntz as review_answer_timestamp
 
     from source
+    qualify row_number() over (
+        partition by review_id
+        order by review_creation_date desc
+    ) = 1
 
 )
 
