@@ -1,4 +1,17 @@
+{{
+    config(
+        materialized='incremental',
+        incremental_strategy='microbatch',
+        unique_key='order_id',
+        event_time='order_purchase_timestamp',
+        batch_size='day',
+        begin='2016-09-01',
+        on_schema_change='append_new_columns'
+    )
+}}
+
 WITH orders AS (
+    -- dbt handles filtering automatically for microbatch if stg_olist_orders has event_time configured
     SELECT * FROM {{ ref('stg_olist_orders') }}
 ),
 

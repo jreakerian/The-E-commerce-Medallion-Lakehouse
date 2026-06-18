@@ -16,6 +16,10 @@ renamed as (
         geolocation_state::varchar as geolocation_state
 
     from source
+    qualify row_number() over (
+        partition by geolocation_zip_code_prefix, geolocation_lat, geolocation_lng
+        order by geolocation_zip_code_prefix
+    ) = 1
 
 )
 

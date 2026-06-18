@@ -1,0 +1,396 @@
+version: 2
+
+models:
+  - name: stg_olist_orders
+    description: "Staging model for Olist orders data."
+    config:
+      contract:
+        enabled: true
+      event_time: order_purchase_timestamp
+    columns:
+      - name: order_id
+        data_type: varchar
+        description: "The unique identifier for an order."
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        data_type: varchar
+        description: "Foreign key to the customers dimension table."
+        tests:
+          - not_null
+
+      - name: order_status
+        data_type: varchar
+        description: "Current status of the order (e.g., delivered, shipped, canceled)."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['delivered', 'shipped', 'canceled', 'invoiced', 'processing', 'unavailable', 'created', 'approved']
+
+      - name: order_purchase_timestamp
+        data_type: timestamp_ntz
+        description: "Timestamp when the order was placed."
+        tests:
+          - not_null
+
+      - name: order_approved_at
+        data_type: timestamp_ntz
+        description: "Timestamp when the order was approved."
+
+      - name: order_delivered_carrier_date
+        data_type: timestamp_ntz
+        description: "Timestamp when the order was delivered to the carrier."
+
+      - name: order_delivered_customer_date
+        data_type: timestamp_ntz
+        description: "Timestamp when the order was delivered to the customer."
+
+      - name: order_estimated_delivery_date
+        data_type: timestamp_ntz
+        description: "Estimated delivery date for the order."
+
+  - name: stg_olist_order_items
+    description: "Staging model for Olist order items data."
+    config:
+      contract:
+        enabled: true
+      event_time: order_purchase_timestamp
+    columns:
+      - name: order_id
+        data_type: varchar
+        description: "Foreign key to orders table."
+        tests:
+          - not_null
+
+      - name: order_item_id
+        data_type: number
+        description: "Sequential item number within an order."
+        tests:
+          - not_null
+
+      - name: product_id
+        data_type: varchar
+        description: "Foreign key to products dimension."
+        tests:
+          - not_null
+
+      - name: seller_id
+        data_type: varchar
+        description: "Foreign key to sellers dimension."
+        tests:
+          - not_null
+
+      - name: shipping_limit_date
+        data_type: timestamp_ntz
+        description: "Deadline for shipping the item."
+
+      - name: price
+        data_type: number(10,2)
+        description: "Price of the item."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: freight_value
+        data_type: number(10,2)
+        description: "Freight cost for the item."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  - name: stg_olist_order_payments
+    description: "Staging model for Olist order payments data."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: order_id
+        data_type: varchar
+        description: "Foreign key to orders table."
+        tests:
+          - not_null
+
+      - name: payment_sequential
+        data_type: number
+        description: "Sequential number for multiple payments per order."
+        tests:
+          - not_null
+
+      - name: payment_type
+        data_type: varchar
+        description: "Payment method type (credit_card, boleto, voucher, debit_card)."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['credit_card', 'boleto', 'voucher', 'debit_card', 'not_defined']
+
+      - name: payment_installments
+        data_type: number
+        description: "Number of installments for the payment."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+
+      - name: payment_value
+        data_type: number(10,2)
+        description: "Value of the payment."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  - name: stg_olist_order_reviews
+    description: "Staging model for Olist order reviews data."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: review_id
+        data_type: varchar
+        description: "Unique identifier for the review."
+        tests:
+          - unique
+          - not_null
+
+      - name: order_id
+        data_type: varchar
+        description: "Foreign key to orders table."
+        tests:
+          - not_null
+
+      - name: review_score
+        data_type: number
+        description: "Review score from 1 to 5."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+                max_value: 5
+
+      - name: review_comment_title
+        data_type: varchar
+        description: "Title of the review comment."
+
+      - name: review_comment_message
+        data_type: varchar
+        description: "Full review comment message."
+
+      - name: review_creation_date
+        data_type: timestamp_ntz
+        description: "Timestamp when the review was created."
+
+      - name: review_answer_timestamp
+        data_type: timestamp_ntz
+        description: "Timestamp when the review was answered by the seller."
+
+  - name: stg_olist_customers
+    description: "Staging model for Olist customers data."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: customer_id
+        data_type: varchar
+        description: "Unique identifier for a customer (used for order joining)."
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_unique_id
+        data_type: varchar
+        description: "Unique identifier for a customer (business key)."
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_zip_code_prefix
+        data_type: varchar
+        description: "First 5 digits of customer ZIP code."
+        tests:
+          - not_null
+
+      - name: customer_city
+        data_type: varchar
+        description: "Customer city."
+        tests:
+          - not_null
+
+      - name: customer_state
+        data_type: varchar
+        description: "Customer state (2-letter code)."
+        tests:
+          - not_null
+
+  - name: stg_olist_sellers
+    description: "Staging model for Olist sellers data."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: seller_id
+        data_type: varchar
+        description: "Unique identifier for a seller."
+        tests:
+          - unique
+          - not_null
+
+      - name: seller_zip_code_prefix
+        data_type: varchar
+        description: "First 5 digits of seller ZIP code."
+        tests:
+          - not_null
+
+      - name: seller_city
+        data_type: varchar
+        description: "Seller city."
+        tests:
+          - not_null
+
+      - name: seller_state
+        data_type: varchar
+        description: "Seller state (2-letter code)."
+        tests:
+          - not_null
+
+  - name: stg_olist_products
+    description: "Staging model for Olist products data."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: "Unique identifier for a product."
+        tests:
+          - unique
+          - not_null
+
+      - name: product_category_name
+        data_type: varchar
+        description: "Product category name (Portuguese)."
+
+      - name: product_name_length
+        data_type: number
+        description: "Length of product name in characters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_description_length
+        data_type: number
+        description: "Length of product description in characters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_photos_qty
+        data_type: number
+        description: "Number of product photos."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_weight_g
+        data_type: number
+        description: "Product weight in grams."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_length_cm
+        data_type: number
+        description: "Product length in centimeters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_height_cm
+        data_type: number
+        description: "Product height in centimeters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_width_cm
+        data_type: number
+        description: "Product width in centimeters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  - name: stg_olist_geolocation
+    description: "Staging model for Olist geolocation data."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: geolocation_zip_code_prefix
+        data_type: varchar
+        description: "ZIP code prefix."
+        tests:
+          - not_null
+
+      - name: geolocation_lat
+        data_type: number(10,8)
+        description: "Latitude coordinate."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -90
+                max_value: 90
+
+      - name: geolocation_lng
+        data_type: number(11,8)
+        description: "Longitude coordinate."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: -180
+                max_value: 180
+
+      - name: geolocation_city
+        data_type: varchar
+        description: "City name."
+
+      - name: geolocation_state
+        data_type: varchar
+        description: "State code."
+
+  - name: stg_product_category_name_translation
+    description: "Staging model for product category name translations."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: product_category_name
+        data_type: varchar
+        description: "Product category name in Portuguese."
+        tests:
+          - unique
+          - not_null
+
+      - name: product_category_name_english
+        data_type: varchar
+        description: "Product category name in English."
+        tests:
+          - not_null

@@ -17,6 +17,10 @@ renamed as (
         order_estimated_delivery_date::timestamp_ntz as order_estimated_delivery_date
 
     from source
+    qualify row_number() over (
+        partition by order_id
+        order by order_purchase_timestamp desc
+    ) = 1
 
 )
 

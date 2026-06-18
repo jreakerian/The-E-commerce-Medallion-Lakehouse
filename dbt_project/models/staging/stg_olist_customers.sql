@@ -15,6 +15,10 @@ renamed as (
         customer_state::varchar as customer_state
 
     from source
+    qualify row_number() over (
+        partition by customer_id
+        order by customer_id
+    ) = 1
 
 )
 

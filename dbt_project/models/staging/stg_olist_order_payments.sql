@@ -16,6 +16,10 @@ renamed as (
         payment_value::number(10,2) as payment_value
 
     from source
+    qualify row_number() over (
+        partition by order_id, payment_sequential
+        order by order_id
+    ) = 1
 
 )
 

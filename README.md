@@ -95,6 +95,38 @@ Apply the SQL found in `snowflake_setup/` to establish the Storage Integration b
 1. Start Airflow: `astro dev start`
 2. Trigger the `olist_elt_pipeline_dag` to ingest data and build the Lakehouse.
 
-## 📈 Future Roadmap
-- **Incremental Loading:** Transition `fct_orders` from a full refresh to an incremental model using Snowflake streams.
-- **CI/CD:** Integrate GitHub Actions to run `dbt build --select state:modified+` on every Pull Request.
+2.  **Connect Airflow to dbt Cloud**:
+    *   In dbt Cloud, generate a **Service Account Token** with "Job Admin" permissions .
+    *   In the Airflow UI, navigate to **Admin -> Connections** and create a new connection .
+    *   Set the connection type to `dbt Cloud` and fill in the details:
+        *   **Connection Id**: `dbt_cloud_default`
+        *   **API Token**: Your dbt Cloud service token.
+        *   **Account ID**: Your dbt Cloud account ID.
+
+## Running the Pipeline
+
+1.  **Ingest Raw Data**:
+    *   First, run the Python script to upload the Olist CSV files from your local machine to the S3 bucket's bronze layer.
+    *   Navigate to the `ingestion/` directory and run:
+        ```bash
+        python s3_ingestion.py
+        ```
+
+2.  **Trigger the Airflow DAG**:
+    *   In the Airflow UI (`http://localhost:8880`), find the DAG named `dbt_cloud_olist_pipeline`.
+    *   Unpause the DAG using the toggle on the left.
+    *   Click the "Play" button on the right to trigger a manual run. This will make an API call to dbt Cloud, which will execute the `dbt build` command on your project.
+
+3.  **Verify the Results**:
+    *   You can monitor the job's progress in the dbt Cloud UI.
+    *   Once the run is complete, query the `dim_customers` and `fct_orders` tables in your Snowflake `ANALYTICS_GOLD` schema to see the final, transformed data.
+
+## Future Enhancements
+
+This project provides a solid foundation that can be extended with more advanced features:
+
+*   **Incremental Models**: Convert the `fct_orders` model to an incremental model to optimize performance and reduce costs on subsequent runs.
+- [x] **Incremental Models**: Transitioned `fct_orders` to dbt Microbatch incremental strategy.
+*   **CI/CD Integration**: Use dbt Cloud's built-in CI/CD features or GitHub Actions to automatically test and deploy changes on pull requests.
+*   **Advanced Data Quality**: Incorporate packages like `dbt-expectations` for more comprehensive and expressive data quality testing.
+*   **Data Visualization**: Connect a BI tool like Tableau to the Gold layer tables in Snowflake to build an executive dashboard.

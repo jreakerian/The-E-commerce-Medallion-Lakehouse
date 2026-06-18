@@ -18,6 +18,10 @@ renamed as (
         freight_value::number(10,2) as freight_value
 
     from source
+    qualify row_number() over (
+        partition by order_id, order_item_id
+        order by shipping_limit_date desc
+    ) = 1
 
 )
 

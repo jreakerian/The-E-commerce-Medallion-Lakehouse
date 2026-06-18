@@ -1,5 +1,12 @@
 sources:
   - name: raw_bronze
+    description: "Raw data from the Olist e-commerce dataset, loaded as external tables on S3."
+    database: OLIST_LAKEHOUSE
+    schema: RAW_BRONZE
+    loaded_at_field: metadata$file_last_modified
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
     tables:
       - name: olist_customers_dataset
         columns:
@@ -7,8 +14,10 @@ sources:
             data_type: variant
           - name: customer_id
             data_type: varchar
+            description: Unique identifier for each customer in the dataset.
           - name: customer_unique_id
             data_type: varchar
+            description: Unique identifier for each customer across all orders, allowing for tracking of repeat customers.
           - name: customer_zip_code_prefix
             data_type: varchar
           - name: customer_city

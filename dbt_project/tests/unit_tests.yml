@@ -1,0 +1,173 @@
+unit_tests:
+  # ---------------------------------------------------------------------------
+  # fct_orders: Verifies aggregation of order items + payment join logic
+  # ---------------------------------------------------------------------------
+  - name: test_fct_orders_aggregation
+    description: >
+      Verify that fct_orders correctly aggregates item prices/freight/counts from
+      order items and joins the total payment value from the pivoted payments model.
+      Also verifies COALESCE handles orders with no items gracefully.
+    model: fct_orders
+    given:
+      - input: ref('stg_olist_orders')
+        rows:
+          - {order_id: "ord_001", customer_id: "cust_A", order_status: "delivered",
+             order_purchase_timestamp: "2023-06-15 10:30:00",
+             order_approved_at: "2023-06-15 11:00:00",
+             order_delivered_carrier_date: "2023-06-16 08:00:00",
+             order_delivered_customer_date: "2023-06-20 14:00:00",
+             order_estimated_delivery_date: "2023-06-25 00:00:00"}
+          - {order_id: "ord_002", customer_id: "cust_B", order_status: "shipped",
+             order_purchase_timestamp: "2023-06-16 09:00:00",
+             order_approved_at: "2023-06-16 09:30:00",
+             order_delivered_carrier_date: null,
+             order_delivered_customer_date: null,
+             order_estimated_delivery_date: "2023-06-22 00:00:00"}
+      - input: ref('stg_olist_order_items')
+        rows:
+          # ord_001 has 2 items
+          - {order_id: "ord_001", order_item_id: 1, product_id: "prod_X",
+             seller_id: "sell_1", shipping_limit_date: "2023-06-18 00:00:00",
+             price: 100.00, freight_value: 15.50}
+          - {order_id: "ord_001", order_item_id: 2, product_id: "prod_Y",
+             seller_id: "sell_2", shipping_limit_date: "2023-06-18 00:00:00",
+             price: 49.99, freight_value: 10.00}
+          # ord_002 has no items (tests COALESCE)
+      - input: ref('int_order_payments_pivoted')
+        rows:
+          - {order_id: "ord_001", boleto_amount: 0.00, credit_card_amount: 175.49,
+             voucher_amount: 0.00, debit_card_amount: 0.00, total_amount: 175.49}
+          # ord_002 has no payment (tests COALESCE)
+    expect:
+      rows:
+        - {order_id: "ord_001", customer_id: "cust_A", order_status: "delivered",
+           total_price: 149.99, total_freight_value: 25.50,
+           number_of_items: 2, total_payment_value: 175.49}
+        - {order_id: "ord_002", customer_id: "cust_B", order_status: "shipped",
+           total_price: 0, total_freight_value: 0,
+           number_of_items: 0, total_payment_value: 0}
+
+  # ---------------------------------------------------------------------------
+  # dim_customers: Verifies first/most_recent order date + order count logic
+  # ---------------------------------------------------------------------------
+  - name: test_dim_customers_order_metrics
+    description: >
+      Verify that dim_customers correctly computes first_order_date,
+      most_recent_order_date, and number_of_orders. Also ensures customers
+      with no orders get COALESCE'd to 0 orders.
+    model: dim_customers
+    given:
+      - input: ref('stg_olist_customers')
+        rows:
+          - {customer_id: "cust_A", customer_unique_id: "uniq_A",
+             customer_zip_code_prefix: "01310", customer_city: "sao paulo",
+             customer_state: "SP"}
+          - {customer_id: "cust_B", customer_unique_id: "uniq_B",
+             customer_zip_code_prefix: "20040", customer_city: "rio de janeiro",
+             customer_state: "RJ"}
+          - {customer_id: "cust_C", customer_unique_id: "uniq_C",
+             customer_zip_code_prefix: "30130", customer_city: "belo horizonte",
+             customer_state: "MG"}
+      - input: ref('stg_olist_orders')
+        rows:
+          # cust_A has 2 orders
+          - {order_id: "ord_001", customer_id: "cust_A", order_status: "delivered",
+             order_purchase_timestamp: "2023-01-15 10:00:00",
+             order_approved_at: null, order_delivered_carrier_date: null,
+             order_delivered_customer_date: null, order_estimated_delivery_date: null}
+          - {order_id: "ord_002", customer_id: "cust_A", order_status: "delivered",
+             order_purchase_timestamp: "2023-06-20 14:00:00",
+             order_approved_at: null, order_delivered_carrier_date: null,
+             order_delivered_customer_date: null, order_estimated_delivery_date: null}
+          # cust_B has 1 order
+          - {order_id: "ord_003", customer_id: "cust_B", order_status: "shipped",
+             order_purchase_timestamp: "2023-03-10 09:00:00",
+             order_approved_at: null, order_delivered_carrier_date: null,
+             order_delivered_customer_date: null, order_estimated_delivery_date: null}
+          # cust_C has no orders (tests COALESCE)
+    expect:
+      rows:
+        - {customer_id: "cust_A", customer_unique_id: "uniq_A",
+           customer_zip_code_prefix: "01310", customer_city: "sao paulo",
+           customer_state: "SP",
+           first_order_date: "2023-01-15 10:00:00",
+           most_recent_order_date: "2023-06-20 14:00:00",
+           number_of_orders: 2}
+        - {customer_id: "cust_B", customer_unique_id: "uniq_B",
+           customer_zip_code_prefix: "20040", customer_city: "rio de janeiro",
+           customer_state: "RJ",
+           first_order_date: "2023-03-10 09:00:00",
+           most_recent_order_date: "2023-03-10 09:00:00",
+           number_of_orders: 1}
+        - {customer_id: "cust_C", customer_unique_id: "uniq_C",
+           customer_zip_code_prefix: "30130", customer_city: "belo horizonte",
+           customer_state: "MG",
+           first_order_date: null,
+           most_recent_order_date: null,
+           number_of_orders: 0}
+
+  # ---------------------------------------------------------------------------
+  # int_order_payments_pivoted: Verifies the Jinja pivot produces correct amounts
+  # ---------------------------------------------------------------------------
+  - name: test_int_order_payments_pivot_logic
+    description: >
+      Verify the Jinja-driven pivot correctly sums payment values by type
+      and calculates total_amount. Tests mixed payment types, single type,
+      and filters out unknown payment types ('not_defined').
+    model: int_order_payments_pivoted
+    given:
+      - input: ref('stg_olist_order_payments')
+        rows:
+          # ord_001: two credit card payments + one boleto
+          - {order_id: "ord_001", payment_sequential: 1,
+             payment_type: "credit_card", payment_installments: 3,
+             payment_value: 100.00}
+          - {order_id: "ord_001", payment_sequential: 2,
+             payment_type: "credit_card", payment_installments: 1,
+             payment_value: 50.00}
+          - {order_id: "ord_001", payment_sequential: 3,
+             payment_type: "boleto", payment_installments: 1,
+             payment_value: 25.00}
+          # ord_002: single voucher payment
+          - {order_id: "ord_002", payment_sequential: 1,
+             payment_type: "voucher", payment_installments: 1,
+             payment_value: 80.00}
+          # ord_003: 'not_defined' type — should be filtered out
+          - {order_id: "ord_003", payment_sequential: 1,
+             payment_type: "not_defined", payment_installments: 1,
+             payment_value: 10.00}
+    expect:
+      rows:
+        - {order_id: "ord_001",
+           boleto_amount: 25.00, credit_card_amount: 150.00,
+           voucher_amount: 0.00, debit_card_amount: 0.00,
+           total_amount: 175.00}
+        - {order_id: "ord_002",
+           boleto_amount: 0.00, credit_card_amount: 0.00,
+           voucher_amount: 80.00, debit_card_amount: 0.00,
+           total_amount: 80.00}
+
+  # ---------------------------------------------------------------------------
+  # stg_olist_products: Verifies the lenght→length column rename
+  # ---------------------------------------------------------------------------
+  - name: test_stg_products_column_rename
+    description: >
+      Verify that the misspelled source columns 'product_name_lenght' and
+      'product_description_lenght' are correctly renamed to 'product_name_length'
+      and 'product_description_length' in the staging model.
+    model: stg_olist_products
+    given:
+      - input: source('raw_bronze', 'olist_products_dataset')
+        rows:
+          - {product_id: "prod_001", product_category_name: "informatica",
+             product_name_lenght: 42, product_description_lenght: 512,
+             product_photos_qty: 3, product_weight_g: 1500,
+             product_length_cm: 30, product_height_cm: 10,
+             product_width_cm: 20}
+    expect:
+      rows:
+        - {product_id: "prod_001", product_category_name: "informatica",
+           product_name_length: 42, product_description_length: 512,
+           product_photos_qty: 3, product_weight_g: 1500,
+           product_length_cm: 30, product_height_cm: 10,
+           product_width_cm: 20}
