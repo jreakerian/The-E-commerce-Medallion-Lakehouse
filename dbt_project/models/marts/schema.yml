@@ -1,16 +1,31 @@
 version: 2
 
 models:
+  - name: metricflow_time_spine
+    description: "Time spine model required for dbt Semantic Layer"
+    config:
+      meta:
+        time_spine:
+          standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        data_type: date
+
   - name: fct_orders
     description: "The central fact table for all Olist orders."
+    config:
+      contract:
+        enabled: true
     columns:
       - name: order_id
+        data_type: varchar
         description: "The unique identifier for an order."
         tests:
           - unique
           - not_null
-      
+
       - name: customer_id
+        data_type: varchar
         description: "Foreign key to the customers dimension table."
         tests:
           - not_null
@@ -19,19 +34,405 @@ models:
                 to: ref('dim_customers')
                 field: customer_id
 
-      - name: payment_value
-        description: "The total value paid for the order."
+      - name: order_status
+        data_type: varchar
+        description: "Current status of the order."
+        tests:
+          - not_null
+
+      - name: order_purchase_timestamp
+        data_type: timestamp_ntz
+        description: "Timestamp when the order was placed."
+        tests:
+          - not_null
+
+      - name: order_delivered_customer_date
+        data_type: timestamp_ntz
+        description: "Timestamp when the order was delivered to the customer."
+
+      - name: total_price
+        data_type: number(10,2)
+        description: "Sum of item prices for the order."
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
               arguments:
                 min_value: 0
-                # No max value
+
+      - name: total_freight_value
+        data_type: number(10,2)
+        description: "Sum of freight values for the order."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: number_of_items
+        data_type: number
+        description: "Count of items in the order."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+
+      - name: total_payment_value
+        data_type: number(10,2)
+        description: "The total value paid for the order."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
 
   - name: dim_customers
     description: "The dimension table for customers."
+    config:
+      contract:
+        enabled: true
     columns:
       - name: customer_id
-        description: "The unique identifier for a customer."
+        data_type: varchar
+        description: "The unique identifier for a customer (used for order joining)."
         tests:
           - unique
           - not_null
+
+      - name: customer_unique_id
+        data_type: varchar
+        description: "The business key for a customer."
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_zip_code_prefix
+        data_type: varchar
+        description: "First 5 digits of customer ZIP code."
+        tests:
+          - not_null
+
+      - name: customer_city
+        data_type: varchar
+        description: "Customer city."
+        tests:
+          - not_null
+
+      - name: customer_state
+        data_type: varchar
+        description: "Customer state (2-letter code)."
+        tests:
+          - not_null
+
+      - name: first_order_date
+        data_type: timestamp_ntz
+        description: "Date of customer's first order."
+
+      - name: most_recent_order_date
+        data_type: timestamp_ntz
+        description: "Date of customer's most recent order."
+
+      - name: number_of_orders
+        data_type: number
+        description: "Total number of orders placed by customer."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  - name: fct_order_items
+    description: "Fact table for order line items with order and customer context."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: order_id
+        data_type: varchar
+        description: "Foreign key to orders fact table."
+        tests:
+          - not_null
+
+      - name: order_item_id
+        data_type: number
+        description: "Sequential item number within an order."
+        tests:
+          - not_null
+
+      - name: customer_id
+        data_type: varchar
+        description: "Foreign key to customers dimension."
+        tests:
+          - not_null
+
+      - name: product_id
+        data_type: varchar
+        description: "Foreign key to products dimension."
+        tests:
+          - not_null
+
+      - name: seller_id
+        data_type: varchar
+        description: "Foreign key to sellers dimension."
+        tests:
+          - not_null
+
+      - name: shipping_limit_date
+        data_type: timestamp_ntz
+        description: "Deadline for shipping the item."
+
+      - name: price
+        data_type: number(10,2)
+        description: "Price of the item."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: freight_value
+        data_type: number(10,2)
+        description: "Freight cost for the item."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: order_status
+        data_type: varchar
+        description: "Status of the parent order."
+        tests:
+          - not_null
+
+      - name: order_purchase_timestamp
+        data_type: timestamp_ntz
+        description: "Timestamp when the order was placed."
+        tests:
+          - not_null
+
+  - name: dim_products
+    description: "Dimension table for products with sales and review metrics."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: "Unique identifier for a product."
+        tests:
+          - unique
+          - not_null
+
+      - name: product_category_name
+        data_type: varchar
+        description: "Product category name (Portuguese)."
+
+      - name: product_category_name_english
+        data_type: varchar
+        description: "Product category name in English."
+
+      - name: product_name_length
+        data_type: number
+        description: "Length of product name in characters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_description_length
+        data_type: number
+        description: "Length of product description in characters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_photos_qty
+        data_type: number
+        description: "Number of product photos."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_weight_g
+        data_type: number
+        description: "Product weight in grams."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_length_cm
+        data_type: number
+        description: "Product length in centimeters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_height_cm
+        data_type: number
+        description: "Product height in centimeters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: product_width_cm
+        data_type: number
+        description: "Product width in centimeters."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: total_units_sold
+        data_type: number
+        description: "Total units of this product sold."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: total_revenue_generated
+        data_type: number(10,2)
+        description: "Total revenue generated by this product."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: average_review_score
+        data_type: number
+        description: "Average review score for this product (1-5)."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+                max_value: 5
+
+      - name: total_reviews
+        data_type: number
+        description: "Total number of reviews for this product."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  - name: dim_sellers
+    description: "Dimension table for sellers with performance metrics."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: seller_id
+        data_type: varchar
+        description: "Unique identifier for a seller."
+        tests:
+          - unique
+          - not_null
+
+      - name: seller_zip_code_prefix
+        data_type: varchar
+        description: "First 5 digits of seller ZIP code."
+        tests:
+          - not_null
+
+      - name: seller_city
+        data_type: varchar
+        description: "Seller city."
+        tests:
+          - not_null
+
+      - name: seller_state
+        data_type: varchar
+        description: "Seller state (2-letter code)."
+        tests:
+          - not_null
+
+      - name: total_sales_value
+        data_type: number(10,2)
+        description: "Total sales value fulfilled by this seller."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: total_orders_fulfilled
+        data_type: number
+        description: "Total unique orders fulfilled by this seller."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: average_freight_value
+        data_type: number(10,2)
+        description: "Average freight value for this seller's items."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+      - name: average_fulfillment_days
+        data_type: number
+        description: "Average days from purchase to carrier delivery."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+
+  - name: fct_customer_reviews
+    description: "Fact table for customer reviews with order context."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: review_id
+        data_type: varchar
+        description: "Unique identifier for the review."
+        tests:
+          - unique
+          - not_null
+
+      - name: order_id
+        data_type: varchar
+        description: "Foreign key to orders fact table."
+        tests:
+          - not_null
+
+      - name: customer_id
+        data_type: varchar
+        description: "Foreign key to customers dimension."
+        tests:
+          - not_null
+
+      - name: order_status
+        data_type: varchar
+        description: "Status of the reviewed order."
+        tests:
+          - not_null
+
+      - name: review_score
+        data_type: number
+        description: "Review score from 1 to 5."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+                max_value: 5
+
+      - name: review_comment_title
+        data_type: varchar
+        description: "Title of the review comment."
+
+      - name: review_comment_message
+        data_type: varchar
+        description: "Full review comment message."
+
+      - name: review_creation_date
+        data_type: timestamp_ntz
+        description: "Timestamp when the review was created."
+      - name: review_answer_timestamp
+        data_type: timestamp_ntz
+        description: "Timestamp when the review was answered by the seller."
