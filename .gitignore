@@ -6,6 +6,8 @@
 *.p8
 *.pub
 rsa_key*
+ARCHITECTURE_DECISIONS*
+TECHNICAL_INTERVIEW_WALKTHROUGH*
 
 # ============================================================
 # Python
