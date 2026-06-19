@@ -54,8 +54,8 @@ saved_queries:
         - total_gmv
       group_by:
         - TimeDimension('metric_time', 'DAY')
-        - Dimension('order_item_id__product_id')
-        - Dimension('order_item_id__seller_id')
+        - Entity('order_item_id__product_id')
+        - Entity('order_item_id__seller_id')
     exports:
       - name: daily_items_and_gmv
         config:

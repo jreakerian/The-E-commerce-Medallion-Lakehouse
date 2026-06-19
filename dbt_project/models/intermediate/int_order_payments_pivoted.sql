@@ -12,7 +12,7 @@ pivoted as (
          {%endfor-%},
          SUM(payment_value) AS total_amount
     from payments
-    WHERE payment_type IN ('boleto','credit_card','voucher','debit_card')
+    WHERE payment_type IN ('boleto','credit_card','voucher','debit_card','not_defined')
     group by 1
 )
 select * from pivoted

@@ -4,8 +4,9 @@ models:
   - name: metricflow_time_spine
     description: "Time spine model required for dbt Semantic Layer"
     config:
-      time_spine:
-        standard_granularity_column: date_day
+      meta:
+        time_spine:
+          standard_granularity_column: date_day
     columns:
       - name: date_day
         data_type: date
