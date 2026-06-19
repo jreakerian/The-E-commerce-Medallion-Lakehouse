@@ -53,8 +53,8 @@ saved_queries:
         - total_items_sold
         - total_gmv
       group_by:
-        - TimeDimension('order_purchase_timestamp', 'DAY')
-        - Dimension('fct_order_items_semantic__order_status')
+        - TimeDimension('metric_time', 'DAY')
+        - Dimension('order_item_id__order_status')
     exports:
       - name: daily_items_and_gmv
         config:

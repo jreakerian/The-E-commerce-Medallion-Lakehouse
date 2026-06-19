@@ -101,8 +101,8 @@ saved_queries:
         - fulfillment_rate
         - average_fulfillment_days
       group_by:
-        - TimeDimension('order_purchase_timestamp', 'DAY')
-        - Dimension('fct_orders_semantic__order_status')
+        - TimeDimension('metric_time', 'DAY')
+        - Dimension('order_id__order_status')
     exports:
       - name: daily_order_performance
         config:
