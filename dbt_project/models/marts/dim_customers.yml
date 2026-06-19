@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "The dimension table for customers."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: customer_id
+        data_type: varchar
+        description: "The unique identifier for a customer (used for order joining)."
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_unique_id
+        data_type: varchar
+        description: "The business key for a customer."
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_zip_code_prefix
+        data_type: varchar
+        description: "First 5 digits of customer ZIP code."
+        tests:
+          - not_null
+
+      - name: customer_city
+        data_type: varchar
+        description: "Customer city."
+        tests:
+          - not_null
+
+      - name: customer_state
+        data_type: varchar
+        description: "Customer state (2-letter code)."
+        tests:
+          - not_null
+
+      - name: first_order_date
+        data_type: timestamp_ntz
+        description: "Date of customer's first order."
+
+      - name: most_recent_order_date
+        data_type: timestamp_ntz
+        description: "Date of customer's most recent order."
+
+      - name: number_of_orders
+        data_type: number
+        description: "Total number of orders placed by customer."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0

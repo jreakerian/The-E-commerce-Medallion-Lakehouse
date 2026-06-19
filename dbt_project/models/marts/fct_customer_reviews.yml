@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: fct_customer_reviews
+    description: "Fact table for customer reviews with order context."
+    config:
+      contract:
+        enabled: true
+    columns:
+      - name: review_id
+        data_type: varchar
+        description: "Unique identifier for the review."
+        tests:
+          - unique
+          - not_null
+
+      - name: order_id
+        data_type: varchar
+        description: "Foreign key to orders fact table."
+        tests:
+          - not_null
+
+      - name: customer_id
+        data_type: varchar
+        description: "Foreign key to customers dimension."
+        tests:
+          - not_null
+
+      - name: order_status
+        data_type: varchar
+        description: "Status of the reviewed order."
+        tests:
+          - not_null
+
+      - name: review_score
+        data_type: number
+        description: "Review score from 1 to 5."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 1
+                max_value: 5
+
+      - name: review_comment_title
+        data_type: varchar
+        description: "Title of the review comment."
+
+      - name: review_comment_message
+        data_type: varchar
+        description: "Full review comment message."
+
+      - name: review_creation_date
+        data_type: timestamp_ntz
+        description: "Timestamp when the review was created."
+
+      - name: review_answer_timestamp
+        data_type: timestamp_ntz
+        description: "Timestamp when the review was answered by the seller."
