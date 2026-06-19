@@ -1,0 +1,62 @@
+version: 2
+
+semantic_models:
+  - name: fct_order_items_semantic
+    model: ref('fct_order_items')
+    defaults:
+      agg_time_dimension: order_purchase_timestamp
+    entities:
+      - name: order_item_id
+        type: primary
+      - name: order_id
+        type: foreign
+      - name: product_id
+        type: foreign
+      - name: seller_id
+        type: foreign
+    dimensions:
+      - name: order_purchase_timestamp
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: items_sold
+        expr: 1
+        agg: sum
+      - name: gmv
+        expr: price
+        agg: sum
+
+metrics:
+  - name: total_items_sold
+    label: Total Items Sold
+    description: "Total number of items sold across all orders."
+    type: simple
+    type_params:
+      measure: items_sold
+
+  - name: total_gmv
+    label: Total GMV
+    description: "Gross Merchandise Value — sum of all item prices."
+    type: simple
+    type_params:
+      measure: gmv
+
+saved_queries:
+  - name: daily_items_and_gmv
+    label: "Daily Items Sold & GMV"
+    description: >
+      Pre-built daily breakdown of units sold and gross merchandise value
+      by product and seller. Exported as a Snowflake table for BI tools.
+    query_params:
+      metrics:
+        - total_items_sold
+        - total_gmv
+      group_by:
+        - TimeDimension('order_purchase_timestamp', 'DAY')
+        - Dimension('fct_order_items_semantic__order_status')
+    exports:
+      - name: daily_items_and_gmv
+        config:
+          export_as: table
+          schema: gold
