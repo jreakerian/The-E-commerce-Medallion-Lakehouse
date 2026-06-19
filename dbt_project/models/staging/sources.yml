@@ -1,14 +1,26 @@
 sources:
   - name: raw_bronze
+    description: "Raw data from the Olist e-commerce dataset, loaded as external tables on S3."
+    database: OLIST_LAKEHOUSE
+    schema: RAW_BRONZE
+    config:
+      loaded_at_field: metadata$file_last_modified
+      freshness:
+        warn_after: {count: 24, period: hour}
+        error_after: {count: 48, period: hour}
     tables:
       - name: olist_customers_dataset
+        tests:
+          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
           - name: customer_id
             data_type: varchar
+            description: Unique identifier for each customer in the dataset.
           - name: customer_unique_id
             data_type: varchar
+            description: Unique identifier for each customer across all orders, allowing for tracking of repeat customers.
           - name: customer_zip_code_prefix
             data_type: varchar
           - name: customer_city
@@ -17,6 +29,8 @@ sources:
             data_type: varchar
 
       - name: olist_geolocation_dataset
+        tests:
+          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -32,6 +46,8 @@ sources:
             data_type: varchar
 
       - name: olist_order_items_dataset
+        tests:
+          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -51,6 +67,8 @@ sources:
             data_type: number
 
       - name: olist_order_payments_dataset
+        tests:
+          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -66,6 +84,8 @@ sources:
             data_type: number
 
       - name: olist_order_reviews_dataset
+        tests:
+          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -85,6 +105,8 @@ sources:
             data_type: timestamp_ntz
 
       - name: olist_orders_dataset
+        tests:
+          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -106,6 +128,8 @@ sources:
             data_type: timestamp_ntz
 
       - name: olist_products_dataset
+        tests:
+          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -129,6 +153,8 @@ sources:
             data_type: number
 
       - name: olist_sellers_dataset
+        tests:
+          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -142,6 +168,8 @@ sources:
             data_type: varchar
 
       - name: product_category_name_translation
+        tests:
+          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant

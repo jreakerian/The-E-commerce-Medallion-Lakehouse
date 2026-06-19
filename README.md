@@ -1,110 +1,99 @@
-# The E-commerce Medallion Lakehouse: A Blueprint for a Snowflake-Powered Data Platform
+# The E-commerce Medallion Lakehouse: Brazilian Market Intelligence
 
-This repository contains a complete, production-grade data engineering project that builds an ELT pipeline for the Olist E-commerce dataset. It demonstrates a modern data stack, implementing a Medallion Lakehouse architecture to ingest raw data, transform it through quality-gated layers, and serve it in an analytics-ready format for business intelligence.
-
----
-
-## 📚 Table of Contents
-
-1. [Architectural Overview](-#architectural-overview)
-
-2. [Technology Stack](-#-technology-stack)
-
-3. [Project Structure](-#project-structure)
-
-4. [Setup and Installation](-#setup-and-installation)
-
-5. [Step 1: Prerequisites](#step-1-prerequisites)
-
-6. [Step 2: Cloud Infrastructure Setup (AWS & Snowflake)](#step-2-cloud-infrastructure-setup-aws--snowflake)
-
-7. [Step 3: dbt Cloud Configuration](#step-3-dbt-cloud-configuration)
-
-8. [Step 4: Airflow Orchestration Setup](#step-4-airflow-orchestration-setup)
-
-9. [Running the Pipeline](#running-the-pipeline)
-
-10. [Future Enhancements](#future-enhancements)
+This repository demonstrates a production-grade ELT pipeline and Medallion Lakehouse architecture built on Snowflake, dbt, and Airflow. It transforms raw, fragmented e-commerce data into a high-performance analytical engine.
 
 ---
-
 ## Architectural Overview
-This project is built on a modern Lakehouse Architecture, which combines the cost-effective storage of a data lake with the performance and governance of a data warehouse. Data flows through a Medallion Architecture, ensuring quality and traceability across three distinct layers :
+This project is built on a modern Lakehouse Architecture, which combines the cost-effective storage of a data lake with the performance and governance of a data warehouse. Data flows through a Medallion Architecture, ensuring quality and traceability across three distinct layers:
 
 Bronze Layer: Raw, immutable data is ingested from source systems into an Amazon S3 data lake.
-
 Silver Layer: Data is cleaned, conformed, and enriched in Snowflake, creating a validated "single source of truth."
-
 Gold Layer: Data is aggregated into business-specific data marts, modeled as a star schema, and optimized for analytics.
 
 ![Architecture Diagram](medalion_architecture.svg)
+---
 
-## Technology Stack
 
-*   **Cloud Provider**: Amazon Web Services (AWS)
-*   **Data Lake Storage**: Amazon S3
-*   **Data Warehouse**: Snowflake
-*   **Data Transformation**: dbt Cloud
-*   **Workflow Orchestration**: Apache Airflow (via Astro CLI)
-*   **Data Ingestion**: Python (`boto3`, `pandas`)
-*   **Business Intelligence**: Tableau
+## 1. The Problem
+Modern e-commerce platforms like Olist generate millions of events across disparate datasets (orders, payments, reviews, and logistics). Decision-makers face three primary hurdles:
+1. **Data Fragmentation:** Payment details are at a different grain than order headers.
+2. **Schema Drift:** Raw CSV/JSON files lack strict typing, leading to downstream failure.
+3. **Low Trust:** Business logic violations (e.g., an order being delivered before it was purchased) often go undetected until they hit a dashboard.
 
-## Project Structure
+## 2. Project Scope & Dataset
+This project utilizes the **Brazilian E-commerce Public Dataset by Olist**.
+- **Scale:** 100k orders from 2016 to 2018.
+- **Complexity:** Multi-dimensional data including geolocation, customer demographics, and product category translations.
+- **Goal:** Create a 360-degree view of the customer and a robust Order Fact table to drive growth metrics (AOV, CLV, Retention).
 
-The repository is organized into two main components: the `dbt_project` for transformations and the `airflow_project` for orchestration.
+## 3. Use Case: Analytical Star Schema
+The final output is an **Analytics Gold Layer** modeled as a Star Schema:
+- **`fct_orders`:** A consolidated fact table containing order status, timing, and aggregated financial metrics (Price + Freight).
+- **`dim_customers`:** A standardized dimension table tracking customer locations and unique identifiers.
+- **Pivoted Metrics:** Financial data is dynamically pivoted at the intermediate layer to provide a flat view of payment methods per order.
 
-## Setup and Installation
+## 4. Tech Stack & Justification
+| Technology | Choice Justification |
+| :--- | :--- |
+| **Snowflake** | Serves as the compute and storage engine. Chosen for its native support for semi-structured data and elastic scaling for ELT workloads. |
+| **dbt (Data Build Tool)** | Handles the "T" in ELT. Used for version-controlled SQL, automated documentation, and modular testing. |
+| **Terraform** | Implements Infrastructure as Code (IaC) to ensure the Snowflake environment (databases, roles, warehouses) is repeatable and secure. |
+| **AWS S3** | Serves as the Bronze (Raw) storage layer, providing highly available and cost-effective object storage. |
+| **Apache Airflow** | Orchestrates the end-to-end flow, managing dependencies between Python ingestion scripts and dbt Cloud jobs. |
 
-Follow these steps to set up and run the project on your local machine.
+## 5. Data Exploration & Assessment
+Initial assessment revealed significant challenges in the raw data:
+- **Semi-structured Blobs:** Raw data was ingested as `VARIANT` types in Snowflake.
+- **Inconsistent Grain:** The `order_items` dataset had multiple rows per `order_id`, while `order_payments` could have multiple payment sequences for a single transaction.
+- **Categorical Mismatches:** Product categories were in Portuguese, requiring a translation join in the Silver layer.
 
-### Step 1: Prerequisites
+## 6. Data Quality Strategy
+To ensure a "Single Source of Truth," I implemented a three-tier quality gate:
 
-Ensure you have the following tools installed:
-1.  **Git**: For cloning the repository.
-2.  **Python & Pip**: For running the ingestion script.
-3.  **Docker Desktop**: Required to run Airflow locally.
-4.  **Astro CLI**: The command-line tool for running Airflow.
-    ```bash
-    brew install astro
-    ```
+### Tier 1: Schema Enforcement (Silver Layer)
+Every staging model (e.g., `stg_olist_orders`) utilizes explicit casting and column renaming. This prevents "silent failures" where a source change breaks downstream logic.
 
-### Step 2: Cloud Infrastructure Setup (AWS & Snowflake)
+### Tier 2: Generic Testing
+Using `dbt-expectations`, I enforced:
+- **Uniqueness & Non-Null:** Ensuring `order_id` is a valid Primary Key.
+- **Referential Integrity:** Ensuring every order in the Fact table exists in the Customer Dimension.
+- **Range Validation:** Enforcing that `payment_value` is never negative.
 
-1.  **AWS Account & S3 Bucket**:
-    *   Create a free AWS account .
-    *   Create an S3 bucket to serve as your data lake.
-    *   Create an IAM user with programmatic access and `AmazonS3FullAccess` permissions. Note your `Access Key ID` and `Secret Access Key`.
+### Tier 3: Custom Logic (Singular Tests)
+Implemented a "Chronological Integrity" test (`assert_delivered_date_is_after_purchase_date.sql`) to catch data anomalies where logistics systems reported delivery before the purchase was finalized.
 
-2.  **Snowflake Account**:
-    *   Sign up for a 30-day free trial of Snowflake . Choose AWS as the cloud provider and the same region as your S3 bucket.
-    *   In a Snowflake worksheet, run the SQL commands to create the necessary databases, schemas, and warehouses as outlined in the project report.
+## 7. Pipeline Execution & DevOps
+The project follows a modern DataOps workflow:
+1. **IaC:** Terraform provisions the Snowflake environment.
+2. **Ingestion:** Python scripts move data to S3.
+3. **Transformation:** dbt builds the Medallion layers:
+   - **Bronze:** External tables pointing to S3.
+   - **Silver:** Cleaned views with standardized types.
+   - **Gold:** Optimized analytical tables.
+4. **Orchestration:** Airflow manages the execution graph and handles retries and alerting.
 
-3.  **Connect Snowflake to S3**:
-    *   Follow the steps in the project report to create a `FILE FORMAT`, `STORAGE INTEGRATION`, `EXTERNAL STAGE`, and `EXTERNAL TABLES` in Snowflake. This allows Snowflake to read data directly from your S3 bucket.
+---
 
-### Step 3: dbt Cloud Configuration
+## 🚀 Quick Start
 
-1.  **Create a dbt Cloud Project**:
-    *   Sign up for a free dbt Cloud Developer account .
-    *   Create a new project and connect it to your Snowflake data warehouse .
-    *   Connect the dbt Cloud project to your forked version of this GitHub repository.
+### Prerequisites
+- Docker Desktop & Astro CLI
+- Snowflake Account
+- AWS IAM Credentials (S3 Access)
 
-2.  **Create a Deployment Job**:
-    *   In dbt Cloud, set up a new deployment environment .
-    *   Create a new **Deploy Job** .
-    *   In the "Execution Settings," add a single command: `dbt build`.
-    *   Under "Triggers," **uncheck** the "Run on Schedule" box. Airflow will be our scheduler .
-    *   Save the job and note the **Job ID** from the URL.
+### Step 1: Provision Infrastructure
+```bash
+cd terraform
+terraform init
+terraform apply
+```
 
-### Step 4: Airflow Orchestration Setup
+### Step 2: Configure dbt & Snowflake
+Apply the SQL found in `snowflake_setup/` to establish the Storage Integration between AWS and Snowflake.
 
-1.  **Initialize Airflow Project**:
-    *   Navigate to the `airflow_project` directory in your local repository.
-    *   Start the local Airflow environment using the Astro CLI:
-        ```bash
-        astro dev start
-        ```
-    *   This will spin up several Docker containers. Access the Airflow UI at `http://localhost:8880` (login: `admin`/`admin`).
+### Step 3: Run the Pipeline
+1. Start Airflow: `astro dev start`
+2. Trigger the `olist_elt_pipeline_dag` to ingest data and build the Lakehouse.
 
 2.  **Connect Airflow to dbt Cloud**:
     *   In dbt Cloud, generate a **Service Account Token** with "Job Admin" permissions .
@@ -137,6 +126,7 @@ Ensure you have the following tools installed:
 This project provides a solid foundation that can be extended with more advanced features:
 
 *   **Incremental Models**: Convert the `fct_orders` model to an incremental model to optimize performance and reduce costs on subsequent runs.
+- [x] **Incremental Models**: Transitioned `fct_orders` to dbt Microbatch incremental strategy.
 *   **CI/CD Integration**: Use dbt Cloud's built-in CI/CD features or GitHub Actions to automatically test and deploy changes on pull requests.
 *   **Advanced Data Quality**: Incorporate packages like `dbt-expectations` for more comprehensive and expressive data quality testing.
 *   **Data Visualization**: Connect a BI tool like Tableau to the Gold layer tables in Snowflake to build an executive dashboard.

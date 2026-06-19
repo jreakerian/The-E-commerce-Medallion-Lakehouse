@@ -1,0 +1,110 @@
+version: 2
+
+semantic_models:
+  - name: fct_orders_semantic
+    model: ref('fct_orders')
+    defaults:
+      agg_time_dimension: order_purchase_timestamp
+    entities:
+      - name: order_id
+        type: primary
+      - name: customer_id
+        type: foreign
+    dimensions:
+      - name: order_status
+        type: categorical
+      - name: order_purchase_timestamp
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: order_count
+        expr: order_id
+        agg: count
+      - name: total_revenue_measure
+        expr: total_price
+        agg: sum
+      - name: total_payment_measure
+        expr: total_payment_value
+        agg: sum
+      - name: delivered_orders_count
+        expr: case when order_status = 'delivered' then 1 else 0 end
+        agg: sum
+      - name: fulfillment_days
+        expr: DATEDIFF('day', order_purchase_timestamp, order_delivered_customer_date)
+        agg: sum
+
+metrics:
+  - name: total_orders
+    label: Total Orders
+    description: "Total number of orders placed."
+    type: simple
+    type_params:
+      measure: order_count
+
+  - name: total_revenue
+    label: Total Revenue
+    description: "Total revenue from all orders."
+    type: simple
+    type_params:
+      measure: total_revenue_measure
+
+  - name: average_order_value
+    label: Average Order Value
+    description: "Average order value across all orders."
+    type: ratio
+    type_params:
+      numerator: total_revenue
+      denominator: total_orders
+
+  - name: delivered_orders
+    label: Delivered Orders
+    description: "Total number of successfully delivered orders."
+    type: simple
+    type_params:
+      measure: delivered_orders_count
+
+  - name: fulfillment_rate
+    label: Fulfillment Rate
+    description: "Percentage of orders delivered vs total orders."
+    type: ratio
+    type_params:
+      numerator: delivered_orders
+      denominator: total_orders
+
+  - name: total_fulfillment_days
+    label: Total Fulfillment Days
+    description: "Sum of days from purchase to customer delivery across all orders."
+    type: simple
+    type_params:
+      measure: fulfillment_days
+
+  - name: average_fulfillment_days
+    label: Average Fulfillment Days
+    description: "Average days from purchase to customer delivery."
+    type: ratio
+    type_params:
+      numerator: total_fulfillment_days
+      denominator: total_orders
+
+saved_queries:
+  - name: daily_order_performance
+    label: "Daily Order Performance"
+    description: >
+      Pre-built daily summary of order volume, revenue, and fulfillment KPIs.
+      Exported as a Snowflake table for direct consumption by BI tools.
+    query_params:
+      metrics:
+        - total_orders
+        - total_revenue
+        - average_order_value
+        - fulfillment_rate
+        - average_fulfillment_days
+      group_by:
+        - TimeDimension('metric_time', 'DAY')
+        - Dimension('order_id__order_status')
+    exports:
+      - name: daily_order_performance
+        config:
+          export_as: table
+          schema: gold

@@ -1,8 +1,10 @@
 -- Create an external table for the orders dataset
 CREATE OR REPLACE EXTERNAL TABLE olist_orders_dataset (
+    -- Extract column from the staged file and cast it to VARCHAR
     order_id VARCHAR AS (value:c1::VARCHAR),
     customer_id VARCHAR AS (value:c2::VARCHAR),
     order_status VARCHAR AS (value:c3::VARCHAR),
+    -- Extract column and convert string → TIMESTAMP_NTZ
     order_purchase_timestamp TIMESTAMP_NTZ AS (TO_TIMESTAMP_NTZ(value:c4::VARCHAR)),
     order_approved_at TIMESTAMP_NTZ AS (TO_TIMESTAMP_NTZ(value:c5::VARCHAR)),
     order_delivered_carrier_date TIMESTAMP_NTZ AS (TO_TIMESTAMP_NTZ(value:c6::VARCHAR)),
@@ -12,7 +14,7 @@ CREATE OR REPLACE EXTERNAL TABLE olist_orders_dataset (
 WITH LOCATION = @OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_BRONZE_STAGE/
 PATTERN = '.*olist_orders_dataset\\.csv$'
 AUTO_REFRESH = FALSE
-FILE_FORMAT = (FORMAT_NAME = 'olist_csv_format');
+FILE_FORMAT = (FORMAT_NAME = 'OLIST_LAKEHOUSE.RAW_BRONZE.olist_csv_format');
 
 LIST @OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_BRONZE_STAGE;
 
@@ -26,7 +28,7 @@ CREATE OR REPLACE EXTERNAL TABLE olist_customers_dataset (
 )
 WITH LOCATION = @olist_bronze_stage/
 PATTERN = '.*olist_customers_dataset\\.csv$'
-FILE_FORMAT = (FORMAT_NAME = 'olist_csv_format')
+FILE_FORMAT = (FORMAT_NAME = 'OLIST_LAKEHOUSE.RAW_BRONZE.olist_csv_format')
 AUTO_REFRESH = FALSE;
 
 CREATE OR REPLACE EXTERNAL TABLE olist_geolocation_dataset (
@@ -38,7 +40,7 @@ CREATE OR REPLACE EXTERNAL TABLE olist_geolocation_dataset (
 )
 WITH LOCATION = @olist_bronze_stage/
 PATTERN = '.*olist_geolocation_dataset\\.csv$'
-FILE_FORMAT = (FORMAT_NAME = 'olist_csv_format')
+FILE_FORMAT = (FORMAT_NAME = 'OLIST_LAKEHOUSE.RAW_BRONZE.olist_csv_format')
 AUTO_REFRESH = FALSE;
 
 CREATE OR REPLACE EXTERNAL TABLE olist_order_items_dataset(
@@ -52,7 +54,7 @@ CREATE OR REPLACE EXTERNAL TABLE olist_order_items_dataset(
 )
 WITH LOCATION = @olist_bronze_stage/
 PATTERN = '.*olist_order_items_dataset\\.csv$'
-FILE_FORMAT = (FORMAT_NAME = 'olist_csv_format')
+FILE_FORMAT = (FORMAT_NAME = 'OLIST_LAKEHOUSE.RAW_BRONZE.olist_csv_format')
 AUTO_REFRESH = FALSE;
 
 CREATE OR REPLACE EXTERNAL TABLE olist_order_payments_dataset (
@@ -64,7 +66,7 @@ CREATE OR REPLACE EXTERNAL TABLE olist_order_payments_dataset (
 )
 WITH LOCATION = @olist_bronze_stage/
 PATTERN = '.*olist_order_payments_dataset\\.csv$'
-FILE_FORMAT = (FORMAT_NAME = 'olist_csv_format')
+FILE_FORMAT = (FORMAT_NAME = 'OLIST_LAKEHOUSE.RAW_BRONZE.olist_csv_format')
 AUTO_REFRESH = FALSE;
 
 CREATE OR REPLACE EXTERNAL TABLE olist_order_reviews_dataset(
@@ -78,7 +80,7 @@ CREATE OR REPLACE EXTERNAL TABLE olist_order_reviews_dataset(
 )
 WITH LOCATION = @olist_bronze_stage/
 PATTERN = '.*olist_order_reviews_dataset\\.csv$'
-FILE_FORMAT = (FORMAT_NAME = 'olist_csv_format')
+FILE_FORMAT = (FORMAT_NAME = 'OLIST_LAKEHOUSE.RAW_BRONZE.olist_csv_format')
 AUTO_REFRESH = FALSE;
 
 
@@ -95,7 +97,7 @@ CREATE OR REPLACE EXTERNAL TABLE olist_products_dataset (
 )
 WITH LOCATION = @olist_bronze_stage/
 PATTERN = '.*olist_products_dataset\\.csv$'
-FILE_FORMAT = (FORMAT_NAME = 'olist_csv_format')
+FILE_FORMAT = (FORMAT_NAME = 'OLIST_LAKEHOUSE.RAW_BRONZE.olist_csv_format')
 AUTO_REFRESH = FALSE;
 
 CREATE OR REPLACE EXTERNAL TABLE olist_sellers_dataset(
@@ -106,7 +108,7 @@ CREATE OR REPLACE EXTERNAL TABLE olist_sellers_dataset(
 )
 WITH LOCATION = @olist_bronze_stage/
 PATTERN = '.*olist_sellers_dataset\\.csv$'
-FILE_FORMAT = (FORMAT_NAME = 'olist_csv_format')
+FILE_FORMAT = (FORMAT_NAME = 'OLIST_LAKEHOUSE.RAW_BRONZE.olist_csv_format')
 AUTO_REFRESH = FALSE;
 
 CREATE OR REPLACE EXTERNAL TABLE product_category_name_translation(
@@ -115,5 +117,5 @@ CREATE OR REPLACE EXTERNAL TABLE product_category_name_translation(
 )
 WITH LOCATION = @olist_bronze_stage/
 PATTERN = '.*product_category_name_translation\\.csv$'
-FILE_FORMAT = (FORMAT_NAME = 'olist_csv_format')
+FILE_FORMAT = (FORMAT_NAME = 'OLIST_LAKEHOUSE.RAW_BRONZE.olist_csv_format')
 AUTO_REFRESH = FALSE;

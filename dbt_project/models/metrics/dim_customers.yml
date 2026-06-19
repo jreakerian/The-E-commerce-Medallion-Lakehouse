@@ -1,0 +1,71 @@
+version: 2
+
+semantic_models:
+  - name: dim_customers_semantic
+    model: ref('dim_customers')
+    defaults:
+      agg_time_dimension: first_order_date
+    entities:
+      - name: customer_id
+        type: primary
+    dimensions:
+      - name: first_order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: customer_city
+        type: categorical
+    measures:
+      - name: unique_customers
+        expr: customer_id
+        agg: count_distinct
+      - name: returning_customers_measure
+        expr: case when number_of_orders > 1 then customer_id else null end
+        agg: count_distinct
+
+metrics:
+  - name: total_customers
+    label: Total Customers
+    description: "Total unique customers who have placed at least one order."
+    type: simple
+    type_params:
+      measure: unique_customers
+
+  - name: returning_customers
+    label: Returning Customers
+    description: "Customers who have placed more than one order."
+    type: simple
+    type_params:
+      measure: returning_customers_measure
+
+  - name: repeat_customer_rate
+    label: Repeat Customer Rate
+    description: "Percentage of customers who placed more than one order."
+    type: derived
+    type_params:
+      expr: returning / total
+      metrics:
+        - name: total_customers
+          alias: total
+        - name: returning_customers
+          alias: returning
+
+saved_queries:
+  - name: customer_retention_summary
+    label: "Customer Retention Summary"
+    description: >
+      Pre-built summary of customer acquisition and retention KPIs by city.
+      Exported as a Snowflake table for direct consumption by BI tools.
+    query_params:
+      metrics:
+        - total_customers
+        - returning_customers
+        - repeat_customer_rate
+      group_by:
+        - TimeDimension('metric_time', 'MONTH')
+        - Dimension('customer_id__customer_city')
+    exports:
+      - name: customer_retention_summary
+        config:
+          export_as: table
+          schema: gold

@@ -22,6 +22,10 @@ clean-targets:         #directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+# Enable contracts for schema enforcement
+#contracts:
+#  enabled: true
+
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
@@ -29,12 +33,27 @@ clean-targets:         #directories to be removed by `dbt clean`
 # directory as views. These settings can be overridden in the individual model
 # files using the `{{ config(...) }}` macro.
 models:
+  elementary:
+    +schema: "elementary"
   olist_lakehouse:
     staging:
       +schema: silver
       +materialized: view
+      +contract:
+        enforced: true
     intermediate:
       +materialized: ephemeral # Ephemeral models are CTEs, not stored in the DB
+      +contract:
+        enforced: true
     marts:
       +schema: gold     
       +materialized: table
+      +contract:
+        enforced: true
+
+tests:
+  +store_failures: true
+  +severity: warn
+
+snapshots:
+  +schema: snapshots

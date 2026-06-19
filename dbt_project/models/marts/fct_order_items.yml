@@ -1,0 +1,102 @@
+version: 2
+
+models:
+  - name: fct_order_items
+    description: "Fact table for order line items with order and customer context."
+    config:
+      contract:
+        enabled: true
+    tests:
+      # -- Volume: detect unexpected row count spikes/drops --
+      - elementary.volume_anomalies:
+          timestamp_column: order_purchase_timestamp
+          training_period:
+            period: month
+            count: 3
+
+      # -- Freshness: detect data delivery delays --
+      - elementary.freshness_anomalies:
+          timestamp_column: order_purchase_timestamp
+          training_period:
+            period: month
+            count: 3
+
+    columns:
+      - name: order_id
+        data_type: varchar
+        description: "Foreign key to orders fact table."
+        tests:
+          - not_null
+
+      - name: order_item_id
+        data_type: number
+        description: "Sequential item number within an order."
+        tests:
+          - not_null
+
+      - name: customer_id
+        data_type: varchar
+        description: "Foreign key to customers dimension."
+        tests:
+          - not_null
+
+      - name: product_id
+        data_type: varchar
+        description: "Foreign key to products dimension."
+        tests:
+          - not_null
+
+      - name: seller_id
+        data_type: varchar
+        description: "Foreign key to sellers dimension."
+        tests:
+          - not_null
+
+      - name: shipping_limit_date
+        data_type: timestamp_ntz
+        description: "Deadline for shipping the item."
+
+      - name: price
+        data_type: number(10,2)
+        description: "Price of the item."
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+          - elementary.column_anomalies:
+              column_anomalies:
+                - average
+                - zero_rate
+              timestamp_column: order_purchase_timestamp
+              training_period:
+                period: month
+                count: 3
+
+      - name: freight_value
+        data_type: number(10,2)
+        description: "Freight cost for the item."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+          - elementary.column_anomalies:
+              column_anomalies:
+                - average
+                - null_rate
+              timestamp_column: order_purchase_timestamp
+              training_period:
+                period: month
+                count: 3
+
+      - name: order_status
+        data_type: varchar
+        description: "Status of the parent order."
+        tests:
+          - not_null
+
+      - name: order_purchase_timestamp
+        data_type: timestamp_ntz
+        description: "Timestamp when the order was placed."
+        tests:
+          - not_null

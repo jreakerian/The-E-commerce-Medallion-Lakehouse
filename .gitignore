@@ -1,1 +1,61 @@
+# ============================================================
+# Environment & Secrets
+# ============================================================
+.env
+.envrc
+*.p8
+*.pub
+rsa_key*
+ARCHITECTURE_DECISIONS*
+TECHNICAL_INTERVIEW_WALKTHROUGH*
+
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+venv/
 dbt-env/
+.venv/
+olist_venv/
+
+# ============================================================
+# dbt
+# ============================================================
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+dbt_project/profiles.yml
+dbt_project/.user.yml
+dbt_project/edr_target/
+dbt_project/tests/profiles.yml
+logs/
+
+# ============================================================
+# Terraform
+# ============================================================
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/*.tfplan
+terraform/*.tfvars
+terraform/.terraform.lock.hcl
+
+# ============================================================
+# Raw Data (download from Kaggle — see README)
+# ============================================================
+ingestion/data/
+
+# ============================================================
+# IDE / OS
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

@@ -20,6 +20,10 @@ renamed as (
         product_width_cm::number as product_width_cm
 
     from source
+    qualify row_number() over (
+        partition by product_id
+        order by product_id
+    ) = 1
 
 )
 

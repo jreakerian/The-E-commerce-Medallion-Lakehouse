@@ -1,0 +1,14 @@
+version: 2
+
+semantic_models:
+  - name: metricflow_time_spine_semantic
+    model: ref('metricflow_time_spine')
+    entities:
+      - name: time_spine_id
+        type: primary
+        expr: date_day
+    dimensions:
+      - name: date_day
+        type: time
+        type_params:
+          time_granularity: day
