@@ -1,591 +1,538 @@
-22:56:13  Running dbt...
+23:14:58  Running dbt...
 /venv/dbt-sha-6bb3d1197160a4df00edce73edc0da111a7ae742/lib/python3.11/site-packages/snowflake/connector/vendored/requests/__init__.py:113: RequestsDependencyWarning: urllib3 (2.6.3) or chardet (7.4.3)/charset_normalizer (3.4.7) doesn't match a supported version!
   warnings.warn(
-22:56:14  Unable to do partial parsing because saved manifest not found. Starting full parse.
-22:56:14  [[33mWARNING[0m][CustomKeyInConfigDeprecation]: Deprecated functionality
-Custom key `time_spine` found in `config` at path `models[0].config` in file
-`models/marts/metricflow_time_spine.yml`. Custom config keys should move into
-the `config.meta`.
-22:56:18  [[33mWARNING[0m][MissingArgumentsPropertyInGenericTestDeprecation]: Deprecated
+23:15:00  [[33mWARNING[0m][MissingArgumentsPropertyInGenericTestDeprecation]: Deprecated
 functionality
 Found top-level arguments to test `elementary.column_anomalies` defined on
-'dim_customers' in package 'olist_lakehouse' (models/marts/dim_customers.yml).
+'fct_orders' in package 'olist_lakehouse' (models/marts/fct_orders.yml).
 Arguments to generic tests should be nested under the `arguments` property.
-22:56:19  [[33mWARNING[0m]: Time spines without YAML configuration are in the process of
+23:15:01  [[33mWARNING[0m]: Time spines without YAML configuration are in the process of
 deprecation. Please add YAML configuration for your 'metricflow_time_spine'
 model. See documentation on MetricFlow time spines:
 https://docs.getdbt.com/docs/build/metricflow-time-spine and behavior change
 documentation:
 https://docs.getdbt.com/reference/global-configs/behavior-changes.
-ERROR:metricflow_semantics.api.v0_1.saved_query_dependency_resolver:Got an exception while getting the dependencies of saved-query 'daily_items_and_gmv'. All semantic models will be returned instead for safety.
-Traceback (most recent call last):
-  File "/venv/dbt-sha-6bb3d1197160a4df00edce73edc0da111a7ae742/lib/python3.11/site-packages/metricflow_semantics/api/v0_1/saved_query_dependency_resolver.py", line 72, in resolve_dependencies
-    return self._resolve_dependencies(saved_query_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/venv/dbt-sha-6bb3d1197160a4df00edce73edc0da111a7ae742/lib/python3.11/site-packages/metricflow_semantics/api/v0_1/saved_query_dependency_resolver.py", line 50, in _resolve_dependencies
-    parse_result = self._query_parser.parse_and_validate_saved_query(
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/venv/dbt-sha-6bb3d1197160a4df00edce73edc0da111a7ae742/lib/python3.11/site-packages/metricflow_semantics/query/query_parser.py", line 117, in parse_and_validate_saved_query
-    return self._parse_and_validate_query(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/venv/dbt-sha-6bb3d1197160a4df00edce73edc0da111a7ae742/lib/python3.11/site-packages/metricflow_semantics/mf_logging/runtime.py", line 37, in _inner
-    result = wrapped_function(*args, **kwargs)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/venv/dbt-sha-6bb3d1197160a4df00edce73edc0da111a7ae742/lib/python3.11/site-packages/metricflow_semantics/query/query_parser.py", line 526, in _parse_and_validate_query
-    self._raise_exception_if_there_are_errors(
-  File "/venv/dbt-sha-6bb3d1197160a4df00edce73edc0da111a7ae742/lib/python3.11/site-packages/metricflow_semantics/query/query_parser.py", line 313, in _raise_exception_if_there_are_errors
-    raise InvalidQueryException(self.generate_error_message(input_to_issue_set=input_to_issue_set))
-metricflow_semantics.errors.error_classes.InvalidQueryException: Got error(s) during query resolution.
-
-Error #1:
-  Message:
-
-    The given input does not match any of the available group-by-items for
-    Measure('items_sold'). Common issues are:
-
-      * Incorrect names.
-      * No valid join paths exist from the measure to the group-by-item.
-        (fan-out join support is pending).
-      * There are multiple matching join paths.
-        (disambiguation support is pending).
-
-    Suggestions:
-      [
-        "Entity('order_item_id__product_id')",
-        "Entity('order_item_id__order_id')",
-        "Dimension('order_id__order_status')",
-        "Entity('order_item_id__seller_id')",
-        "TimeDimension('order_item_id__order_purchase_timestamp', 'day')",
-        "Entity('order_item_id')",
-      ]
-
-  Query Input:
-
-    Dimension('order_item_id__product_id')
-
-  Issue Location:
-
-    [Resolve Query(['total_items_sold', 'total_gmv'])]
-      -> [Resolve Metric('total_items_sold')]
-        -> [Resolve Measure('items_sold')]
-
-Error #2:
-  Message:
-
-    The given input does not match any of the available group-by-items for
-    Measure('gmv'). Common issues are:
-
-      * Incorrect names.
-      * No valid join paths exist from the measure to the group-by-item.
-        (fan-out join support is pending).
-      * There are multiple matching join paths.
-        (disambiguation support is pending).
-
-    Suggestions:
-      [
-        "Entity('order_item_id__product_id')",
-        "Entity('order_item_id__order_id')",
-        "Dimension('order_id__order_status')",
-        "Entity('order_item_id__seller_id')",
-        "TimeDimension('order_item_id__order_purchase_timestamp', 'day')",
-        "Entity('order_item_id')",
-      ]
-
-  Query Input:
-
-    Dimension('order_item_id__product_id')
-
-  Issue Location:
-
-    [Resolve Query(['total_items_sold', 'total_gmv'])]
-      -> [Resolve Metric('total_gmv')]
-        -> [Resolve Measure('gmv')]
-
-Error #3:
-  Message:
-
-    The given input does not match any of the available group-by-items for
-    Measure('items_sold'). Common issues are:
-
-      * Incorrect names.
-      * No valid join paths exist from the measure to the group-by-item.
-        (fan-out join support is pending).
-      * There are multiple matching join paths.
-        (disambiguation support is pending).
-
-    Suggestions:
-      [
-        "Entity('order_item_id__seller_id')",
-        "Entity('order_item_id__order_id')",
-        "Dimension('order_id__order_status')",
-        "Entity('order_item_id__product_id')",
-        "Entity('order_id__customer_id')",
-        "Entity('order_item_id')",
-      ]
-
-  Query Input:
-
-    Dimension('order_item_id__seller_id')
-
-  Issue Location:
-
-    [Resolve Query(['total_items_sold', 'total_gmv'])]
-      -> [Resolve Metric('total_items_sold')]
-        -> [Resolve Measure('items_sold')]
-
-Error #4:
-  Message:
-
-    The given input does not match any of the available group-by-items for
-    Measure('gmv'). Common issues are:
-
-      * Incorrect names.
-      * No valid join paths exist from the measure to the group-by-item.
-        (fan-out join support is pending).
-      * There are multiple matching join paths.
-        (disambiguation support is pending).
-
-    Suggestions:
-      [
-        "Entity('order_item_id__seller_id')",
-        "Entity('order_item_id__order_id')",
-        "Dimension('order_id__order_status')",
-        "Entity('order_item_id__product_id')",
-        "Entity('order_id__customer_id')",
-        "Entity('order_item_id')",
-      ]
-
-  Query Input:
-
-    Dimension('order_item_id__seller_id')
-
-  Issue Location:
-
-    [Resolve Query(['total_items_sold', 'total_gmv'])]
-      -> [Resolve Metric('total_gmv')]
-        -> [Resolve Measure('gmv')]
-22:56:19  [[33mWARNING[0m]: The use of a custom microbatch macro outside of batched
+23:15:01  [[33mWARNING[0m]: The use of a custom microbatch macro outside of batched
 execution is deprecated. To use it with batched execution, set
 `flags.require_batched_execution_for_custom_microbatch_strategy` to `True` in
 `dbt_project.yml`. In the future this will be the default behavior.
-22:56:20  Found 47 models, 2 snapshots, 158 data tests, 2 operations, 9 sources, 12 metrics, 2083 macros, 4 semantic models, 3 saved queries, 4 unit tests
-22:56:20  
-22:56:20
-22:56:20  Concurrency: 16 threads (target='default')
-22:56:20  
-22:56:25  Elementary: Runtime data: {"config": {}, "dbt_version": "2026.6.11+6bb3d11", "elementary_version": "0.24.0", "database": "OLIST_LAKEHOUSE_prod", "schema": "prod_elementary"}
-22:56:26  1 of 1 START hook: elementary.on-run-start.0 ................................... [RUN]
-22:56:26  1 of 1 OK hook: elementary.on-run-start.0 ...................................... [[32mOK[0m in 1.23s]
-22:56:26  
-22:56:26  1 of 213 START sql incremental model prod_elementary.data_monitoring_metrics ... [RUN]
-22:56:26  2 of 213 START sql incremental model prod_elementary.dbt_columns ............... [RUN]
-22:56:26  3 of 213 START sql incremental model prod_elementary.dbt_exposures ............. [RUN]
-22:56:26  4 of 213 START sql incremental model prod_elementary.dbt_groups ................ [RUN]
-22:56:26  5 of 213 START sql incremental model prod_elementary.dbt_invocations ........... [RUN]
-22:56:26  6 of 213 START sql incremental model prod_elementary.dbt_metrics ............... [RUN]
-22:56:26  7 of 213 START sql incremental model prod_elementary.dbt_models ................ [RUN]
-22:56:26  8 of 213 START sql incremental model prod_elementary.dbt_run_results ........... [RUN]
-22:56:26  9 of 213 START sql incremental model prod_elementary.dbt_seeds ................. [RUN]
-22:56:26  10 of 213 START sql incremental model prod_elementary.dbt_snapshots ............ [RUN]
-22:56:26  11 of 213 START sql incremental model prod_elementary.dbt_source_freshness_results  [RUN]
-22:56:26  12 of 213 START sql incremental model prod_elementary.dbt_sources .............. [RUN]
-22:56:26  13 of 213 START sql incremental model prod_elementary.dbt_tests ................ [RUN]
-22:56:26  14 of 213 START sql incremental model prod_elementary.elementary_test_results .. [RUN]
-22:56:26  15 of 213 START sql table model prod_elementary.metadata ....................... [RUN]
-22:56:26  16 of 213 START sql incremental model prod_elementary.schema_columns_snapshot .. [RUN]
-22:56:28  5 of 213 OK created sql incremental model prod_elementary.dbt_invocations ...... [[32mSUCCESS 1[0m in 1.21s]
-22:56:28  1 of 213 OK created sql incremental model prod_elementary.data_monitoring_metrics  [[32mSUCCESS 1[0m in 1.23s]
-22:56:28  17 of 213 START sql table model prod_gold.metricflow_time_spine ................ [RUN]
-22:56:28  18 of 213 START test elementary_source_schema_changes_raw_bronze_olist_customers_dataset_  [RUN]
-22:56:28  Elementary: Started testing schema changes on:OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_CUSTOMERS_DATASET
-22:56:28  3 of 213 OK created sql incremental model prod_elementary.dbt_exposures ........ [[32mSUCCESS 1[0m in 1.45s]
-22:56:28  19 of 213 START test elementary_source_schema_changes_raw_bronze_olist_geolocation_dataset_  [RUN]
-22:56:28  Elementary: Started testing schema changes on:OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_GEOLOCATION_DATASET
-22:56:28  4 of 213 OK created sql incremental model prod_elementary.dbt_groups ........... [[32mSUCCESS 1[0m in 1.79s]
-22:56:28  11 of 213 OK created sql incremental model prod_elementary.dbt_source_freshness_results  [[32mSUCCESS 1[0m in 1.80s]
-22:56:28  15 of 213 OK created sql table model prod_elementary.metadata .................. [[32mSUCCESS 1[0m in 1.84s]
-22:56:28  18 of 213 ERROR elementary_source_schema_changes_raw_bronze_olist_customers_dataset_  [[31mERROR[0m in 0.68s]
-22:56:28  20 of 213 START test elementary_source_schema_changes_raw_bronze_olist_order_items_dataset_  [RUN]
-22:56:28  21 of 213 START test elementary_source_schema_changes_raw_bronze_olist_order_payments_dataset_  [RUN]
-22:56:28  22 of 213 START test elementary_source_schema_changes_raw_bronze_olist_order_reviews_dataset_  [RUN]
-22:56:28  23 of 213 START test elementary_source_schema_changes_raw_bronze_olist_orders_dataset_  [RUN]
-22:56:28  Elementary: Started testing schema changes on:OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_ORDER_ITEMS_DATASET
-22:56:28  Elementary: Started testing schema changes on:OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_ORDER_PAYMENTS_DATASET
-22:56:28  Elementary: Started testing schema changes on:OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_ORDER_REVIEWS_DATASET
-22:56:29  Elementary: Started testing schema changes on:OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_ORDERS_DATASET
-22:56:29  8 of 213 OK created sql incremental model prod_elementary.dbt_run_results ...... [[32mSUCCESS 1[0m in 2.07s]
-22:56:29  14 of 213 OK created sql incremental model prod_elementary.elementary_test_results  [[32mSUCCESS 1[0m in 2.07s]
-22:56:29  16 of 213 OK created sql incremental model prod_elementary.schema_columns_snapshot  [[32mSUCCESS 1[0m in 2.07s]
-22:56:29  24 of 213 START test elementary_source_schema_changes_raw_bronze_olist_products_dataset_  [RUN]
-22:56:29  25 of 213 START test elementary_source_schema_changes_raw_bronze_olist_sellers_dataset_  [RUN]
-22:56:29  26 of 213 START test elementary_source_schema_changes_raw_bronze_product_category_name_translation_  [RUN]
-22:56:29  Elementary: Started testing schema changes on:OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_PRODUCTS_DATASET
-22:56:29  Elementary: Started testing schema changes on:OLIST_LAKEHOUSE.RAW_BRONZE.OLIST_SELLERS_DATASET
-22:56:29  Elementary: Started testing schema changes on:OLIST_LAKEHOUSE.RAW_BRONZE.PRODUCT_CATEGORY_NAME_TRANSLATION
-22:56:29  19 of 213 ERROR elementary_source_schema_changes_raw_bronze_olist_geolocation_dataset_  [[31mERROR[0m in 0.84s]
-22:56:29  27 of 213 START sql view model prod_elementary.job_run_results ................. [RUN]
-22:56:29  9 of 213 OK created sql incremental model prod_elementary.dbt_seeds ............ [[32mSUCCESS 1[0m in 2.42s]
-22:56:29  28 of 213 START sql view model prod_elementary.metrics_anomaly_score ........... [RUN]
-22:56:29  20 of 213 ERROR elementary_source_schema_changes_raw_bronze_olist_order_items_dataset_  [[31mERROR[0m in 0.67s]
-22:56:29  21 of 213 ERROR elementary_source_schema_changes_raw_bronze_olist_order_payments_dataset_  [[31mERROR[0m in 0.68s]
-22:56:29  23 of 213 ERROR elementary_source_schema_changes_raw_bronze_olist_orders_dataset_  [[31mERROR[0m in 0.67s]
-22:56:29  22 of 213 ERROR elementary_source_schema_changes_raw_bronze_olist_order_reviews_dataset_  [[31mERROR[0m in 0.69s]
-22:56:29  29 of 213 START sql view model prod_elementary.monitors_runs ................... [RUN]
-22:56:29  30 of 213 SKIP relation prod_silver.stg_olist_customers ........................ [[33mSKIP[0m]
-22:56:29  31 of 213 START sql view model prod_elementary.alerts_anomaly_detection ........ [RUN]
-22:56:29  32 of 213 START sql view model prod_elementary.alerts_dbt_tests ................ [RUN]
-22:56:29  33 of 213 START sql view model prod_elementary.alerts_schema_changes ........... [RUN]
-22:56:29  27 of 213 OK created sql view model prod_elementary.job_run_results ............ [[32mSUCCESS 1[0m in 0.58s]
-22:56:30  17 of 213 OK created sql table model prod_gold.metricflow_time_spine ........... [[32mSUCCESS 1461[0m in 1.77s]
-22:56:30  34 of 213 START sql incremental model prod_elementary.test_result_rows ......... [RUN]
-22:56:30  35 of 213 SKIP relation prod_silver.stg_olist_geolocation ...................... [[33mSKIP[0m]
-22:56:30  29 of 213 OK created sql view model prod_elementary.monitors_runs .............. [[32mSUCCESS 1[0m in 0.38s]
-22:56:30  36 of 213 START sql view model prod_elementary.seed_run_results ................ [RUN]
-22:56:30  37 of 213 SKIP relation prod_silver.stg_olist_order_items ...................... [[33mSKIP[0m]
-22:56:30  28 of 213 OK created sql view model prod_elementary.metrics_anomaly_score ...... [[32mSUCCESS 1[0m in 0.56s]
-22:56:30  38 of 213 SKIP relation prod_silver.stg_olist_order_payments ................... [[33mSKIP[0m]
-22:56:30  39 of 213 SKIP relation prod_silver.stg_olist_orders ........................... [[33mSKIP[0m]
-22:56:30  33 of 213 OK created sql view model prod_elementary.alerts_schema_changes ...... [[32mSUCCESS 1[0m in 0.41s]
-22:56:30  31 of 213 OK created sql view model prod_elementary.alerts_anomaly_detection ... [[32mSUCCESS 1[0m in 0.43s]
-22:56:30  40 of 213 SKIP relation prod_silver.stg_olist_order_reviews .................... [[33mSKIP[0m]
-22:56:30  41 of 213 SKIP test not_null_stg_olist_customers_customer_city ................. [[33mSKIP[0m]
-22:56:30  42 of 213 SKIP test not_null_stg_olist_customers_customer_id ................... [[33mSKIP[0m]
-22:56:30  43 of 213 SKIP test not_null_stg_olist_customers_customer_state ................ [[33mSKIP[0m]
-22:56:30  44 of 213 SKIP test not_null_stg_olist_customers_customer_unique_id ............ [[33mSKIP[0m]
-22:56:30  45 of 213 SKIP test not_null_stg_olist_customers_customer_zip_code_prefix ...... [[33mSKIP[0m]
-22:56:30  46 of 213 SKIP test unique_stg_olist_customers_customer_id ..................... [[33mSKIP[0m]
-22:56:30  47 of 213 SKIP test unique_stg_olist_customers_customer_unique_id .............. [[33mSKIP[0m]
-22:56:30  48 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_stg_olist_geolocation_geolocation_lat__90___90  [[33mSKIP[0m]
-22:56:30  49 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_stg_olist_geolocation_geolocation_lng__180___180  [[33mSKIP[0m]
-22:56:30  32 of 213 OK created sql view model prod_elementary.alerts_dbt_tests ........... [[32mSUCCESS 1[0m in 0.42s]
-22:56:30  50 of 213 SKIP test not_null_stg_olist_geolocation_geolocation_lat ............. [[33mSKIP[0m]
-22:56:30  51 of 213 SKIP test not_null_stg_olist_geolocation_geolocation_lng ............. [[33mSKIP[0m]
-22:56:30  52 of 213 SKIP test not_null_stg_olist_geolocation_geolocation_zip_code_prefix . [[33mSKIP[0m]
-22:56:30  53 of 213 START sql view model prod_elementary.anomaly_threshold_sensitivity ... [RUN]
-22:56:30  54 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_items_freight_value__0  [[33mSKIP[0m]
-22:56:30  55 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_items_price__0  [[33mSKIP[0m]
-22:56:30  56 of 213 SKIP test not_null_stg_olist_order_items_order_id .................... [[33mSKIP[0m]
-22:56:30  57 of 213 SKIP test not_null_stg_olist_order_items_order_item_id ............... [[33mSKIP[0m]
-22:56:30  58 of 213 SKIP test not_null_stg_olist_order_items_price ....................... [[33mSKIP[0m]
-22:56:30  59 of 213 SKIP test not_null_stg_olist_order_items_product_id .................. [[33mSKIP[0m]
-22:56:30  60 of 213 SKIP test not_null_stg_olist_order_items_seller_id ................... [[33mSKIP[0m]
-22:56:30  61 of 213 SKIP test accepted_values_stg_olist_order_payments_payment_type__credit_card__boleto__voucher__debit_card__not_defined  [[33mSKIP[0m]
-22:56:30  62 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_payments_payment_installments__1  [[33mSKIP[0m]
-22:56:30  63 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_payments_payment_value__0  [[33mSKIP[0m]
-22:56:30  64 of 213 SKIP test not_null_stg_olist_order_payments_order_id ................. [[33mSKIP[0m]
-22:56:30  65 of 213 SKIP test not_null_stg_olist_order_payments_payment_installments ..... [[33mSKIP[0m]
-22:56:30  66 of 213 SKIP test not_null_stg_olist_order_payments_payment_sequential ....... [[33mSKIP[0m]
-22:56:30  67 of 213 SKIP test not_null_stg_olist_order_payments_payment_type ............. [[33mSKIP[0m]
-22:56:30  68 of 213 SKIP test not_null_stg_olist_order_payments_payment_value ............ [[33mSKIP[0m]
-22:56:30  69 of 213 SKIP test accepted_values_stg_olist_orders_order_status__delivered__shipped__canceled__invoiced__processing__unavailable__created__approved  [[33mSKIP[0m]
-22:56:30  70 of 213 SKIP test not_null_stg_olist_orders_customer_id ...................... [[33mSKIP[0m]
-22:56:30  71 of 213 SKIP test not_null_stg_olist_orders_order_id ......................... [[33mSKIP[0m]
-22:56:30  72 of 213 SKIP test not_null_stg_olist_orders_order_purchase_timestamp ......... [[33mSKIP[0m]
-22:56:30  36 of 213 OK created sql view model prod_elementary.seed_run_results ........... [[32mSUCCESS 1[0m in 0.48s]
-22:56:30  73 of 213 SKIP test not_null_stg_olist_orders_order_status ..................... [[33mSKIP[0m]
-22:56:30  74 of 213 SKIP test unique_stg_olist_orders_order_id ........................... [[33mSKIP[0m]
-22:56:30  75 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_reviews_review_score__5__1  [[33mSKIP[0m]
-22:56:30  76 of 213 SKIP test not_null_stg_olist_order_reviews_order_id .................. [[33mSKIP[0m]
-22:56:30  77 of 213 SKIP test not_null_stg_olist_order_reviews_review_id ................. [[33mSKIP[0m]
-22:56:30  78 of 213 SKIP test not_null_stg_olist_order_reviews_review_score .............. [[33mSKIP[0m]
-22:56:30  79 of 213 SKIP test unique_stg_olist_order_reviews_review_id ................... [[33mSKIP[0m]
-22:56:30  80 of 213 SKIP relation snapshots.scd_customers ................................ [[33mSKIP[0m]
-22:56:30  81 of 213 SKIP unit_test test_int_order_payments_pivot_logic ................... [[33mSKIP[0m]
-22:56:30  83 of 213 SKIP unit_test test_dim_customers_order_metrics ...................... [[33mSKIP[0m]
-22:56:30  82 of 213 SKIP relation prod_gold.fct_order_items .............................. [[33mSKIP[0m]
-22:56:30  84 of 213 SKIP relation prod_gold.dim_customers ................................ [[33mSKIP[0m]
-22:56:30  85 of 213 SKIP relation prod_gold.fct_customer_reviews ......................... [[33mSKIP[0m]
-22:56:30  86 of 213 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_boleto_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
-22:56:30  87 of 213 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_credit_card_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
-22:56:30  88 of 213 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_debit_card_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
-22:56:30  89 of 213 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_total_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
-22:56:30  90 of 213 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_voucher_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
-22:56:30  91 of 213 SKIP relation prod_dbt_test__audit.not_null_int_order_payments_pivoted_order_id due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
-22:56:30  92 of 213 SKIP relation prod_dbt_test__audit.not_null_int_order_payments_pivoted_total_amount due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
-22:56:30  93 of 213 SKIP relation prod_dbt_test__audit.unique_int_order_payments_pivoted_order_id due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
-22:56:30  94 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_order_items_freight_value__0  [[33mSKIP[0m]
-22:56:30  95 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_order_items_price__0  [[33mSKIP[0m]
-22:56:30  96 of 213 SKIP test elementary_column_anomalies_fct_order_items_average__null_rate__freight_value__order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  97 of 213 SKIP test elementary_column_anomalies_fct_order_items_average__zero_rate__price__order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  98 of 213 SKIP test elementary_freshness_anomalies_fct_order_items_order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  99 of 213 SKIP test elementary_volume_anomalies_fct_order_items_order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  100 of 213 SKIP test not_null_fct_order_items_customer_id ...................... [[33mSKIP[0m]
-22:56:30  101 of 213 SKIP test not_null_fct_order_items_order_id ......................... [[33mSKIP[0m]
-22:56:30  102 of 213 SKIP test not_null_fct_order_items_order_item_id .................... [[33mSKIP[0m]
-22:56:30  103 of 213 SKIP test not_null_fct_order_items_order_purchase_timestamp ......... [[33mSKIP[0m]
-22:56:30  104 of 213 SKIP test not_null_fct_order_items_order_status ..................... [[33mSKIP[0m]
-22:56:30  105 of 213 SKIP test not_null_fct_order_items_price ............................ [[33mSKIP[0m]
-22:56:30  106 of 213 SKIP test not_null_fct_order_items_product_id ....................... [[33mSKIP[0m]
-22:56:30  107 of 213 SKIP test not_null_fct_order_items_seller_id ........................ [[33mSKIP[0m]
-22:56:30  108 of 213 SKIP saved_query customer_retention_summary ......................... [[33mSKIP[0m]
-22:56:30  109 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_customers_number_of_orders__0  [[33mSKIP[0m]
-22:56:30  110 of 213 SKIP test elementary_column_anomalies_dim_customers_average__max__number_of_orders  [[33mSKIP[0m]
-22:56:30  34 of 213 OK created sql incremental model prod_elementary.test_result_rows .... [[32mSUCCESS 1[0m in 0.70s]
-22:56:30  111 of 213 SKIP test elementary_dimension_anomalies_dim_customers_customer_state  [[33mSKIP[0m]
-22:56:30  112 of 213 SKIP test elementary_volume_anomalies_dim_customers_ ................ [[33mSKIP[0m]
-22:56:30  113 of 213 SKIP test not_null_dim_customers_customer_city ...................... [[33mSKIP[0m]
-22:56:30  114 of 213 SKIP test not_null_dim_customers_customer_id ........................ [[33mSKIP[0m]
-22:56:30  115 of 213 SKIP test not_null_dim_customers_customer_state ..................... [[33mSKIP[0m]
-22:56:30  116 of 213 SKIP test not_null_dim_customers_customer_unique_id ................. [[33mSKIP[0m]
-22:56:30  117 of 213 SKIP test not_null_dim_customers_customer_zip_code_prefix ........... [[33mSKIP[0m]
-22:56:30  118 of 213 SKIP test not_null_dim_customers_number_of_orders ................... [[33mSKIP[0m]
-22:56:30  119 of 213 SKIP test unique_dim_customers_customer_id .......................... [[33mSKIP[0m]
-22:56:30  120 of 213 SKIP test unique_dim_customers_customer_unique_id ................... [[33mSKIP[0m]
-22:56:30  121 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_customer_reviews_review_score__5__1  [[33mSKIP[0m]
-22:56:30  122 of 213 SKIP test elementary_column_anomalies_fct_customer_reviews_average__null_rate__review_score__review_creation_date__month__3  [[33mSKIP[0m]
-22:56:30  53 of 213 OK created sql view model prod_elementary.anomaly_threshold_sensitivity  [[32mSUCCESS 1[0m in 0.49s]
-22:56:30  123 of 213 SKIP test elementary_freshness_anomalies_fct_customer_reviews_review_creation_date__month__3  [[33mSKIP[0m]
-22:56:30  124 of 213 SKIP test elementary_volume_anomalies_fct_customer_reviews_review_creation_date__month__3  [[33mSKIP[0m]
-22:56:30  125 of 213 SKIP test not_null_fct_customer_reviews_customer_id ................. [[33mSKIP[0m]
-22:56:30  126 of 213 SKIP test not_null_fct_customer_reviews_order_id .................... [[33mSKIP[0m]
-22:56:30  127 of 213 SKIP test not_null_fct_customer_reviews_order_status ................ [[33mSKIP[0m]
-22:56:30  128 of 213 SKIP test not_null_fct_customer_reviews_review_id ................... [[33mSKIP[0m]
-22:56:30  129 of 213 SKIP test not_null_fct_customer_reviews_review_score ................ [[33mSKIP[0m]
-22:56:30  130 of 213 SKIP test unique_fct_customer_reviews_review_id ..................... [[33mSKIP[0m]
-22:56:30  131 of 213 SKIP unit_test test_fct_orders_aggregation .......................... [[33mSKIP[0m]
-22:56:30  132 of 213 SKIP relation prod_gold.fct_orders .................................. [[33mSKIP[0m]
-22:56:30  133 of 213 SKIP saved_query daily_items_and_gmv ................................ [[33mSKIP[0m]
-22:56:30  134 of 213 SKIP saved_query daily_order_performance ............................ [[33mSKIP[0m]
-22:56:30  135 of 213 SKIP test assert_delivered_date_is_after_purchase_date .............. [[33mSKIP[0m]
-22:56:30  136 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_orders_number_of_items__1  [[33mSKIP[0m]
-22:56:30  137 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_orders_total_freight_value__0  [[33mSKIP[0m]
-22:56:30  138 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_orders_total_payment_value__0  [[33mSKIP[0m]
-22:56:30  139 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_orders_total_price__0  [[33mSKIP[0m]
-22:56:30  140 of 213 SKIP test elementary_column_anomalies_fct_orders_average__max__number_of_items__order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  141 of 213 SKIP test elementary_column_anomalies_fct_orders_null_rate__zero_rate__average__total_payment_value__order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  142 of 213 SKIP test elementary_column_anomalies_fct_orders_null_rate__zero_rate__average__total_price__order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  143 of 213 SKIP test elementary_dimension_anomalies_fct_orders_order_status__order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  144 of 213 SKIP test elementary_freshness_anomalies_fct_orders_order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  145 of 213 SKIP test elementary_volume_anomalies_fct_orders_3__order_purchase_timestamp__month__3  [[33mSKIP[0m]
-22:56:30  146 of 213 SKIP test not_null_fct_orders_customer_id ........................... [[33mSKIP[0m]
-22:56:30  147 of 213 SKIP test not_null_fct_orders_number_of_items ....................... [[33mSKIP[0m]
-22:56:30  148 of 213 SKIP test not_null_fct_orders_order_id .............................. [[33mSKIP[0m]
-22:56:30  149 of 213 SKIP test not_null_fct_orders_order_purchase_timestamp .............. [[33mSKIP[0m]
-22:56:30  150 of 213 SKIP test not_null_fct_orders_order_status .......................... [[33mSKIP[0m]
-22:56:30  151 of 213 SKIP test not_null_fct_orders_total_payment_value ................... [[33mSKIP[0m]
-22:56:30  152 of 213 SKIP test relationships_fct_orders_customer_id__customer_id__ref_dim_customers_  [[33mSKIP[0m]
-22:56:30  153 of 213 SKIP test unique_fct_orders_order_id ................................ [[33mSKIP[0m]
-22:56:33  10 of 213 OK created sql incremental model prod_elementary.dbt_snapshots ....... [[32mSUCCESS 1[0m in 6.75s]
-22:56:33  154 of 213 START sql view model prod_elementary.snapshot_run_results ........... [RUN]
-22:56:34  154 of 213 OK created sql view model prod_elementary.snapshot_run_results ...... [[32mSUCCESS 1[0m in 0.47s]
-22:56:34  12 of 213 OK created sql incremental model prod_elementary.dbt_sources ......... [[32mSUCCESS 1[0m in 7.34s]
-22:56:34  155 of 213 START sql view model prod_elementary.alerts_dbt_source_freshness .... [RUN]
-22:56:34  25 of 213 PASS elementary_source_schema_changes_raw_bronze_olist_sellers_dataset_  [[32mPASS[0m in 5.36s]
-22:56:34  156 of 213 START sql view model prod_silver.stg_olist_sellers .................. [RUN]
-22:56:34  26 of 213 PASS elementary_source_schema_changes_raw_bronze_product_category_name_translation_  [[32mPASS[0m in 5.41s]
-22:56:34  157 of 213 START sql view model prod_silver.stg_product_category_name_translation  [RUN]
-22:56:34  6 of 213 OK created sql incremental model prod_elementary.dbt_metrics .......... [[32mSUCCESS 1[0m in 7.59s]
-22:56:34  155 of 213 OK created sql view model prod_elementary.alerts_dbt_source_freshness  [[32mSUCCESS 1[0m in 0.39s]
-22:56:34  24 of 213 PASS elementary_source_schema_changes_raw_bronze_olist_products_dataset_  [[32mPASS[0m in 5.74s]
-22:56:34  158 of 213 START unit_test stg_olist_products::test_stg_products_column_rename . [RUN]
-22:56:35  157 of 213 OK created sql view model prod_silver.stg_product_category_name_translation  [[32mSUCCESS 1[0m in 0.88s]
-22:56:35  156 of 213 OK created sql view model prod_silver.stg_olist_sellers ............. [[32mSUCCESS 1[0m in 0.96s]
-22:56:35  159 of 213 START test not_null_stg_product_category_name_translation_product_category_name  [RUN]
-22:56:35  160 of 213 START test not_null_stg_product_category_name_translation_product_category_name_english  [RUN]
-22:56:35  161 of 213 START test unique_stg_product_category_name_translation_product_category_name  [RUN]
-22:56:35  162 of 213 START test not_null_stg_olist_sellers_seller_city ................... [RUN]
-22:56:35  163 of 213 START test not_null_stg_olist_sellers_seller_id ..................... [RUN]
-22:56:35  164 of 213 START test not_null_stg_olist_sellers_seller_state .................. [RUN]
-22:56:35  165 of 213 START test not_null_stg_olist_sellers_seller_zip_code_prefix ........ [RUN]
-22:56:35  166 of 213 START test unique_stg_olist_sellers_seller_id ....................... [RUN]
-22:56:37  7 of 213 OK created sql incremental model prod_elementary.dbt_models ........... [[32mSUCCESS 1[0m in 10.38s]
-22:56:37  2 of 213 OK created sql incremental model prod_elementary.dbt_columns .......... [[32mSUCCESS 1[0m in 10.41s]
-22:56:37  167 of 213 START sql view model prod_elementary.model_run_results .............. [RUN]
-22:56:37  158 of 213 PASS stg_olist_products::test_stg_products_column_rename ............ [[32mPASS[0m in 2.95s]
-22:56:37  168 of 213 START sql view model prod_silver.stg_olist_products ................. [RUN]
-22:56:38  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['product_name_length', 'product_description_length', 'product_photos_qty', 'product_weight_g', 'product_length_cm', 'product_height_cm', 'product_width_cm']`
-22:56:38  167 of 213 OK created sql view model prod_elementary.model_run_results ......... [[32mSUCCESS 1[0m in 0.85s]
-22:56:38  169 of 213 START sql view model prod_elementary.alerts_dbt_models .............. [RUN]
-22:56:38  161 of 213 PASS unique_stg_product_category_name_translation_product_category_name  [[32mPASS[0m in 2.57s]
-22:56:38  168 of 213 OK created sql view model prod_silver.stg_olist_products ............ [[32mSUCCESS 1[0m in 0.64s]
-22:56:38  170 of 213 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_description_length__0  [RUN]
-22:56:38  171 of 213 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_height_cm__0  [RUN]
-22:56:38  172 of 213 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_length_cm__0  [RUN]
-22:56:38  173 of 213 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_name_length__0  [RUN]
-22:56:38  174 of 213 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_photos_qty__0  [RUN]
-22:56:38  175 of 213 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_weight_g__0  [RUN]
-22:56:38  176 of 213 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_width_cm__0  [RUN]
-22:56:38  160 of 213 PASS not_null_stg_product_category_name_translation_product_category_name_english  [[32mPASS[0m in 2.71s]
-22:56:38  177 of 213 START test not_null_stg_olist_products_product_id ................... [RUN]
-22:56:38  164 of 213 PASS not_null_stg_olist_sellers_seller_state ........................ [[32mPASS[0m in 2.66s]
-22:56:38  178 of 213 START test unique_stg_olist_products_product_id ..................... [RUN]
-22:56:38  162 of 213 PASS not_null_stg_olist_sellers_seller_city ......................... [[32mPASS[0m in 2.87s]
-22:56:38  163 of 213 PASS not_null_stg_olist_sellers_seller_id ........................... [[32mPASS[0m in 2.90s]
-22:56:38  159 of 213 PASS not_null_stg_product_category_name_translation_product_category_name  [[32mPASS[0m in 3.17s]
-22:56:38  165 of 213 PASS not_null_stg_olist_sellers_seller_zip_code_prefix .............. [[32mPASS[0m in 2.90s]
-22:56:39  166 of 213 PASS unique_stg_olist_sellers_seller_id ............................. [[32mPASS[0m in 3.09s]
-22:56:39  179 of 213 SKIP relation prod_gold.dim_sellers ................................. [[33mSKIP[0m]
-22:56:39  180 of 213 START snapshot snapshots.scd_sellers ................................ [RUN]
-22:56:39  181 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_sellers_average_freight_value__0  [[33mSKIP[0m]
-22:56:39  182 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_sellers_average_fulfillment_days__0  [[33mSKIP[0m]
-22:56:39  183 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_sellers_total_orders_fulfilled__0  [[33mSKIP[0m]
-22:56:39  184 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_sellers_total_sales_value__0  [[33mSKIP[0m]
-22:56:39  185 of 213 SKIP test elementary_column_anomalies_dim_sellers_average__average_fulfillment_days  [[33mSKIP[0m]
-22:56:39  186 of 213 SKIP test elementary_column_anomalies_dim_sellers_average__max__total_sales_value  [[33mSKIP[0m]
-22:56:39  187 of 213 SKIP test elementary_dimension_anomalies_dim_sellers_seller_state ... [[33mSKIP[0m]
-22:56:39  188 of 213 SKIP test elementary_volume_anomalies_dim_sellers_ .................. [[33mSKIP[0m]
-22:56:39  189 of 213 SKIP test not_null_dim_sellers_seller_city .......................... [[33mSKIP[0m]
-22:56:39  190 of 213 SKIP test not_null_dim_sellers_seller_id ............................ [[33mSKIP[0m]
-22:56:39  191 of 213 SKIP test not_null_dim_sellers_seller_state ......................... [[33mSKIP[0m]
-22:56:39  192 of 213 SKIP test not_null_dim_sellers_seller_zip_code_prefix ............... [[33mSKIP[0m]
-22:56:39  193 of 213 SKIP test unique_dim_sellers_seller_id .............................. [[33mSKIP[0m]
-22:56:39  169 of 213 OK created sql view model prod_elementary.alerts_dbt_models ......... [[32mSUCCESS 1[0m in 0.92s]
-22:56:40  175 of 213 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_weight_g__0  [[32mPASS[0m in 1.85s]
-22:56:40  172 of 213 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_length_cm__0  [[32mPASS[0m in 1.89s]
-22:56:40  13 of 213 OK created sql incremental model prod_elementary.dbt_tests ........... [[32mSUCCESS 1[0m in 13.44s]
-22:56:40  194 of 213 START sql view model prod_elementary.dbt_artifacts_hashes ........... [RUN]
-22:56:40  177 of 213 PASS not_null_stg_olist_products_product_id ......................... [[32mPASS[0m in 1.85s]
-22:56:40  176 of 213 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_width_cm__0  [[32mPASS[0m in 1.99s]
-22:56:40  174 of 213 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_photos_qty__0  [[32mPASS[0m in 2.01s]
-22:56:40  173 of 213 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_name_length__0  [[32mPASS[0m in 2.24s]
-22:56:40  194 of 213 OK created sql view model prod_elementary.dbt_artifacts_hashes ...... [[32mSUCCESS 1[0m in 0.55s]
-22:56:41  180 of 213 OK snapshotted snapshots.scd_sellers ................................ [[32mSUCCESS 3095[0m in 2.12s]
-22:56:41  171 of 213 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_height_cm__0  [[32mPASS[0m in 2.71s]
-22:56:41  170 of 213 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_description_length__0  [[32mPASS[0m in 2.73s]
-22:56:41  178 of 213 PASS unique_stg_olist_products_product_id ........................... [[32mPASS[0m in 2.86s]
-22:56:41  195 of 213 SKIP relation prod_gold.dim_products ................................ [[33mSKIP[0m]
-22:56:41  196 of 213 SKIP test assert_dim_products_sales_match_order_items ............... [[33mSKIP[0m]
-22:56:41  197 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_average_review_score__5__1  [[33mSKIP[0m]
-22:56:41  198 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_product_description_length__0  [[33mSKIP[0m]
-22:56:41  199 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_product_height_cm__0  [[33mSKIP[0m]
-22:56:41  200 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_product_length_cm__0  [[33mSKIP[0m]
-22:56:41  201 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_product_name_length__0  [[33mSKIP[0m]
-22:56:41  202 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_product_photos_qty__0  [[33mSKIP[0m]
-22:56:41  203 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_product_weight_g__0  [[33mSKIP[0m]
-22:56:41  204 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_product_width_cm__0  [[33mSKIP[0m]
-22:56:41  205 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_total_revenue_generated__0  [[33mSKIP[0m]
-22:56:41  206 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_total_reviews__0  [[33mSKIP[0m]
-22:56:41  207 of 213 SKIP test dbt_expectations_expect_column_values_to_be_between_dim_products_total_units_sold__0  [[33mSKIP[0m]
-22:56:41  208 of 213 SKIP test elementary_column_anomalies_dim_products_average__average_review_score  [[33mSKIP[0m]
-22:56:41  209 of 213 SKIP test elementary_column_anomalies_dim_products_average__max__total_revenue_generated  [[33mSKIP[0m]
-22:56:41  210 of 213 SKIP test elementary_dimension_anomalies_dim_products_product_category_name_english  [[33mSKIP[0m]
-22:56:41  211 of 213 SKIP test elementary_volume_anomalies_dim_products_ ................. [[33mSKIP[0m]
-22:56:41  212 of 213 SKIP test not_null_dim_products_product_id .......................... [[33mSKIP[0m]
-22:56:41  213 of 213 SKIP test unique_dim_products_product_id ............................ [[33mSKIP[0m]
-22:56:41  
-22:57:02  1 of 1 START hook: elementary.on-run-end.0 ..................................... [RUN]
-22:57:02  1 of 1 OK hook: elementary.on-run-end.0 ........................................ [[32mOK[0m in 21.03s]
-22:57:06  
-22:57:06
-22:57:06  Finished running 17 incremental models, 2 project hooks, 3 saved queries, 2 snapshots, 7 table models, 158 data tests, 4 unit tests, 22 view models in 0 hours 0 minutes and 45.96 seconds (45.96s).
-22:57:06  
-22:57:06
-22:57:06  [31mCompleted with 14 errors, 0 partial successes, and 0 warnings:[0m
-22:57:06  
-22:57:06
-22:57:06  [31mFailure in test elementary_source_schema_changes_raw_bronze_olist_customers_dataset_ (models/staging/sources.yml)[0m
-22:57:06
-22:57:06    Database Error in test elementary_source_schema_changes_raw_bronze_olist_customers_dataset_ (models/staging/sources.yml)
-  001003 (42000): SQL compilation error:
-  syntax error line 93 at position 8 unexpected 'select'.
-  syntax error line 93 at position 32 unexpected 'from'.
-  syntax error line 101 at position 8 unexpected 'where'.
-  syntax error line 101 at position 29 unexpected 'select'.
-  syntax error line 101 at position 40 unexpected 'detected_at'.
-  syntax error line 101 at position 53 unexpected 'from'.
-22:57:06  
-22:57:06
-22:57:06    See test failures:
+23:15:01  Found 149 data tests, 47 models, 2 operations, 2 snapshots, 9 sources, 12 metrics, 2083 macros, 4 semantic models, 3 saved queries, 4 unit tests
+23:15:01  
+23:15:01
+23:15:01  Concurrency: 16 threads (target='default')
+23:15:01  
+23:15:08  Elementary: Runtime data: {"config": {}, "dbt_version": "2026.6.11+6bb3d11", "elementary_version": "0.24.0", "database": "OLIST_LAKEHOUSE_prod", "schema": "prod_elementary"}
+23:15:09  1 of 1 START hook: elementary.on-run-start.0 ................................... [RUN]
+23:15:09  1 of 1 OK hook: elementary.on-run-start.0 ...................................... [[32mOK[0m in 1.61s]
+23:15:09  
+23:15:09  1 of 204 START sql incremental model prod_elementary.data_monitoring_metrics ... [RUN]
+23:15:09  2 of 204 START sql incremental model prod_elementary.dbt_columns ............... [RUN]
+23:15:09  3 of 204 START sql incremental model prod_elementary.dbt_exposures ............. [RUN]
+23:15:09  4 of 204 START sql incremental model prod_elementary.dbt_groups ................ [RUN]
+23:15:09  5 of 204 START sql incremental model prod_elementary.dbt_invocations ........... [RUN]
+23:15:09  6 of 204 START sql incremental model prod_elementary.dbt_metrics ............... [RUN]
+23:15:09  7 of 204 START sql incremental model prod_elementary.dbt_models ................ [RUN]
+23:15:09  8 of 204 START sql incremental model prod_elementary.dbt_run_results ........... [RUN]
+23:15:09  9 of 204 START sql incremental model prod_elementary.dbt_seeds ................. [RUN]
+23:15:09  10 of 204 START sql incremental model prod_elementary.dbt_snapshots ............ [RUN]
+23:15:09  11 of 204 START sql incremental model prod_elementary.dbt_source_freshness_results  [RUN]
+23:15:09  12 of 204 START sql incremental model prod_elementary.dbt_sources .............. [RUN]
+23:15:09  13 of 204 START sql incremental model prod_elementary.dbt_tests ................ [RUN]
+23:15:09  14 of 204 START sql incremental model prod_elementary.elementary_test_results .. [RUN]
+23:15:09  15 of 204 START sql table model prod_elementary.metadata ....................... [RUN]
+23:15:09  16 of 204 START sql incremental model prod_elementary.schema_columns_snapshot .. [RUN]
+23:15:12  15 of 204 OK created sql table model prod_elementary.metadata .................. [[32mSUCCESS 1[0m in 2.55s]
+23:15:12  17 of 204 START sql table model prod_gold.metricflow_time_spine ................ [RUN]
+23:15:12  4 of 204 OK created sql incremental model prod_elementary.dbt_groups ........... [[32mSUCCESS 0[0m in 2.74s]
+23:15:12  18 of 204 START sql view model prod_silver.stg_olist_customers ................. [RUN]
+23:15:12  3 of 204 OK created sql incremental model prod_elementary.dbt_exposures ........ [[32mSUCCESS 0[0m in 2.76s]
+23:15:12  19 of 204 START sql view model prod_silver.stg_olist_geolocation ............... [RUN]
+23:15:12  1 of 204 OK created sql incremental model prod_elementary.data_monitoring_metrics  [[32mSUCCESS 0[0m in 3.02s]
+23:15:12  20 of 204 START sql view model prod_silver.stg_olist_order_items ............... [RUN]
+23:15:13  9 of 204 OK created sql incremental model prod_elementary.dbt_seeds ............ [[32mSUCCESS 0[0m in 3.25s]
+23:15:13  21 of 204 START sql view model prod_silver.stg_olist_order_payments ............ [RUN]
+23:15:13  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['order_item_id']`
+23:15:13  5 of 204 OK created sql incremental model prod_elementary.dbt_invocations ...... [[32mSUCCESS 0[0m in 3.32s]
+23:15:13  22 of 204 START sql view model prod_silver.stg_olist_order_reviews ............. [RUN]
+23:15:13  11 of 204 OK created sql incremental model prod_elementary.dbt_source_freshness_results  [[32mSUCCESS 0[0m in 3.48s]
+23:15:13  23 of 204 START sql view model prod_silver.stg_olist_orders .................... [RUN]
+23:15:13  18 of 204 OK created sql view model prod_silver.stg_olist_customers ............ [[32mSUCCESS 1[0m in 0.77s]
+23:15:13  29 of 204 START unit_test stg_olist_products::test_stg_products_column_rename .. [RUN]
+23:15:13  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['review_score']`
+23:15:13  8 of 204 OK created sql incremental model prod_elementary.dbt_run_results ...... [[32mSUCCESS 0[0m in 3.62s]
+23:15:13  16 of 204 OK created sql incremental model prod_elementary.schema_columns_snapshot  [[32mSUCCESS 0[0m in 3.62s]
+23:15:13  24 of 204 START sql view model prod_silver.stg_olist_sellers ................... [RUN]
+23:15:13  25 of 204 START sql view model prod_silver.stg_product_category_name_translation  [RUN]
+23:15:13  19 of 204 OK created sql view model prod_silver.stg_olist_geolocation .......... [[32mSUCCESS 1[0m in 0.87s]
+23:15:13  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['payment_sequential', 'payment_installments']`
+23:15:13  26 of 204 START sql view model prod_elementary.metrics_anomaly_score ........... [RUN]
+23:15:13  14 of 204 OK created sql incremental model prod_elementary.elementary_test_results  [[32mSUCCESS 0[0m in 3.90s]
+23:15:13  20 of 204 OK created sql view model prod_silver.stg_olist_order_items .......... [[32mSUCCESS 1[0m in 0.90s]
+23:15:13  27 of 204 START sql view model prod_elementary.monitors_runs ................... [RUN]
+23:15:13  28 of 204 START sql view model prod_elementary.job_run_results ................. [RUN]
+23:15:13  17 of 204 OK created sql table model prod_gold.metricflow_time_spine ........... [[32mSUCCESS 1461[0m in 1.44s]
+23:15:13  30 of 204 START test not_null_stg_olist_customers_customer_city ................ [RUN]
+23:15:14  10 of 204 OK created sql incremental model prod_elementary.dbt_snapshots ....... [[32mSUCCESS 0[0m in 4.27s]
+23:15:14  22 of 204 OK created sql view model prod_silver.stg_olist_order_reviews ........ [[32mSUCCESS 1[0m in 0.97s]
+23:15:14  31 of 204 START test not_null_stg_olist_customers_customer_id .................. [RUN]
+23:15:14  32 of 204 START test not_null_stg_olist_customers_customer_state ............... [RUN]
+23:15:14  21 of 204 OK created sql view model prod_silver.stg_olist_order_payments ....... [[32mSUCCESS 1[0m in 1.07s]
+23:15:14  26 of 204 OK created sql view model prod_elementary.metrics_anomaly_score ...... [[32mSUCCESS 1[0m in 0.62s]
+23:15:14  33 of 204 START test not_null_stg_olist_customers_customer_unique_id ........... [RUN]
+23:15:14  34 of 204 START test not_null_stg_olist_customers_customer_zip_code_prefix ..... [RUN]
+23:15:14  27 of 204 OK created sql view model prod_elementary.monitors_runs .............. [[32mSUCCESS 1[0m in 0.43s]
+23:15:14  23 of 204 OK created sql view model prod_silver.stg_olist_orders ............... [[32mSUCCESS 1[0m in 0.96s]
+23:15:14  6 of 204 OK created sql incremental model prod_elementary.dbt_metrics .......... [[32mSUCCESS 0[0m in 4.36s]
+23:15:14  28 of 204 OK created sql view model prod_elementary.job_run_results ............ [[32mSUCCESS 1[0m in 0.43s]
+23:15:14  35 of 204 START test unique_stg_olist_customers_customer_id .................... [RUN]
+23:15:14  36 of 204 START test unique_stg_olist_customers_customer_unique_id ............. [RUN]
+23:15:14  37 of 204 START sql view model prod_elementary.seed_run_results ................ [RUN]
+23:15:14  38 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_geolocation_geolocation_lat__90___90  [RUN]
+23:15:14  24 of 204 OK created sql view model prod_silver.stg_olist_sellers .............. [[32mSUCCESS 1[0m in 0.88s]
+23:15:14  39 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_geolocation_geolocation_lng__180___180  [RUN]
+23:15:14  12 of 204 OK created sql incremental model prod_elementary.dbt_sources ......... [[32mSUCCESS 0[0m in 4.57s]
+23:15:14  40 of 204 START test not_null_stg_olist_geolocation_geolocation_lat ............ [RUN]
+23:15:14  25 of 204 OK created sql view model prod_silver.stg_product_category_name_translation  [[32mSUCCESS 1[0m in 0.94s]
+23:15:14  41 of 204 START test not_null_stg_olist_geolocation_geolocation_lng ............ [RUN]
+23:15:14  37 of 204 OK created sql view model prod_elementary.seed_run_results ........... [[32mSUCCESS 1[0m in 0.48s]
+23:15:14  42 of 204 START test not_null_stg_olist_geolocation_geolocation_zip_code_prefix  [RUN]
+23:15:14  2 of 204 OK created sql incremental model prod_elementary.dbt_columns .......... [[32mSUCCESS 0[0m in 5.07s]
+23:15:14  43 of 204 START sql view model prod_elementary.alerts_anomaly_detection ........ [RUN]
+23:15:15  29 of 204 PASS stg_olist_products::test_stg_products_column_rename ............. [[32mPASS[0m in 1.78s]
+23:15:15  84 of 204 START sql view model prod_silver.stg_olist_products .................. [RUN]
+23:15:15  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['product_name_length', 'product_description_length', 'product_photos_qty', 'product_weight_g', 'product_length_cm', 'product_height_cm', 'product_width_cm']`
+23:15:15  43 of 204 OK created sql view model prod_elementary.alerts_anomaly_detection ... [[32mSUCCESS 1[0m in 0.57s]
+23:15:15  44 of 204 START sql view model prod_elementary.alerts_dbt_tests ................ [RUN]
+23:15:16  84 of 204 OK created sql view model prod_silver.stg_olist_products ............. [[32mSUCCESS 1[0m in 0.78s]
+23:15:16  45 of 204 START sql view model prod_elementary.alerts_schema_changes ........... [RUN]
+23:15:16  44 of 204 OK created sql view model prod_elementary.alerts_dbt_tests ........... [[32mSUCCESS 1[0m in 0.45s]
+23:15:16  46 of 204 START sql incremental model prod_elementary.test_result_rows ......... [RUN]
+23:15:16  31 of 204 PASS not_null_stg_olist_customers_customer_id ........................ [[32mPASS[0m in 1.89s]
+23:15:16  47 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_items_freight_value__0  [RUN]
+23:15:16  32 of 204 PASS not_null_stg_olist_customers_customer_state ..................... [[32mPASS[0m in 2.11s]
+23:15:16  48 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_items_price__0  [RUN]
+23:15:16  33 of 204 PASS not_null_stg_olist_customers_customer_unique_id ................. [[32mPASS[0m in 2.10s]
+23:15:16  49 of 204 START test not_null_stg_olist_order_items_order_id ................... [RUN]
+23:15:16  45 of 204 OK created sql view model prod_elementary.alerts_schema_changes ...... [[32mSUCCESS 1[0m in 0.38s]
+23:15:16  50 of 204 START test not_null_stg_olist_order_items_order_item_id .............. [RUN]
+23:15:16  30 of 204 PASS not_null_stg_olist_customers_customer_city ...................... [[32mPASS[0m in 2.53s]
+23:15:16  34 of 204 PASS not_null_stg_olist_customers_customer_zip_code_prefix ........... [[32mPASS[0m in 2.23s]
+23:15:16  51 of 204 START test not_null_stg_olist_order_items_price ...................... [RUN]
+23:15:16  52 of 204 START test not_null_stg_olist_order_items_product_id ................. [RUN]
+23:15:16  35 of 204 PASS unique_stg_olist_customers_customer_id .......................... [[32mPASS[0m in 2.22s]
+23:15:16  53 of 204 START test not_null_stg_olist_order_items_seller_id .................. [RUN]
+23:15:17  46 of 204 OK created sql incremental model prod_elementary.test_result_rows .... [[32mSUCCESS 0[0m in 1.74s]
+23:15:17  54 of 204 START sql view model prod_elementary.snapshot_run_results ............ [RUN]
+23:15:17  36 of 204 WARN 2997 unique_stg_olist_customers_customer_unique_id .............. [[33mWARN 2997[0m in 3.41s]
+23:15:17  55 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_reviews_review_score__5__1  [RUN]
+23:15:18  38 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_geolocation_geolocation_lat__90___90  [[32mPASS[0m in 3.81s]
+23:15:18  54 of 204 OK created sql view model prod_elementary.snapshot_run_results ....... [[32mSUCCESS 1[0m in 0.45s]
+23:15:18  56 of 204 START test not_null_stg_olist_order_reviews_order_id ................. [RUN]
+23:15:18  57 of 204 START test not_null_stg_olist_order_reviews_review_id ................ [RUN]
+23:15:18  40 of 204 PASS not_null_stg_olist_geolocation_geolocation_lat .................. [[32mPASS[0m in 4.13s]
+23:15:18  58 of 204 START test not_null_stg_olist_order_reviews_review_score ............. [RUN]
+23:15:18  41 of 204 PASS not_null_stg_olist_geolocation_geolocation_lng .................. [[32mPASS[0m in 4.12s]
+23:15:18  59 of 204 START test unique_stg_olist_order_reviews_review_id .................. [RUN]
+23:15:18  47 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_order_items_freight_value__0  [[32mPASS[0m in 2.64s]
+23:15:18  60 of 204 START test accepted_values_stg_olist_order_payments_payment_type__credit_card__boleto__voucher__debit_card__not_defined  [RUN]
+23:15:18  42 of 204 PASS not_null_stg_olist_geolocation_geolocation_zip_code_prefix ...... [[32mPASS[0m in 3.89s]
+23:15:18  61 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_payments_payment_installments__1  [RUN]
+23:15:18  39 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_geolocation_geolocation_lng__180___180  [[32mPASS[0m in 4.34s]
+23:15:18  62 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_payments_payment_value__0  [RUN]
+23:15:19  50 of 204 PASS not_null_stg_olist_order_items_order_item_id .................... [[32mPASS[0m in 2.92s]
+23:15:19  63 of 204 START test not_null_stg_olist_order_payments_order_id ................ [RUN]
+23:15:19  48 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_order_items_price__0  [[32mPASS[0m in 3.16s]
+23:15:19  64 of 204 START test not_null_stg_olist_order_payments_payment_installments .... [RUN]
+23:15:19  52 of 204 PASS not_null_stg_olist_order_items_product_id ....................... [[32mPASS[0m in 3.25s]
+23:15:19  65 of 204 START test not_null_stg_olist_order_payments_payment_sequential ...... [RUN]
+23:15:19  53 of 204 PASS not_null_stg_olist_order_items_seller_id ........................ [[32mPASS[0m in 3.17s]
+23:15:19  66 of 204 START test not_null_stg_olist_order_payments_payment_type ............ [RUN]
+23:15:19  51 of 204 PASS not_null_stg_olist_order_items_price ............................ [[32mPASS[0m in 3.28s]
+23:15:19  67 of 204 START test not_null_stg_olist_order_payments_payment_value ........... [RUN]
+23:15:20  49 of 204 PASS not_null_stg_olist_order_items_order_id ......................... [[32mPASS[0m in 3.71s]
+23:15:20  68 of 204 START sql view model prod_elementary.anomaly_threshold_sensitivity ... [RUN]
+23:15:20  7 of 204 OK created sql incremental model prod_elementary.dbt_models ........... [[32mSUCCESS 0[0m in 10.22s]
+23:15:20  69 of 204 START test accepted_values_stg_olist_orders_order_status__delivered__shipped__canceled__invoiced__processing__unavailable__created__approved  [RUN]
+23:15:20  55 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_order_reviews_review_score__5__1  [[32mPASS[0m in 2.60s]
+23:15:20  70 of 204 START test not_null_stg_olist_orders_customer_id ..................... [RUN]
+23:15:20  68 of 204 OK created sql view model prod_elementary.anomaly_threshold_sensitivity  [[32mSUCCESS 1[0m in 0.44s]
+23:15:20  71 of 204 START test not_null_stg_olist_orders_order_id ........................ [RUN]
+23:15:20  62 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_order_payments_payment_value__0  [[32mPASS[0m in 2.13s]
+23:15:20  72 of 204 START test not_null_stg_olist_orders_order_purchase_timestamp ........ [RUN]
+23:15:21  59 of 204 PASS unique_stg_olist_order_reviews_review_id ........................ [[32mPASS[0m in 2.32s]
+23:15:21  73 of 204 START test not_null_stg_olist_orders_order_status .................... [RUN]
+23:15:21  57 of 204 PASS not_null_stg_olist_order_reviews_review_id ...................... [[32mPASS[0m in 2.59s]
+23:15:21  74 of 204 START test unique_stg_olist_orders_order_id .......................... [RUN]
+23:15:21  56 of 204 PASS not_null_stg_olist_order_reviews_order_id ....................... [[32mPASS[0m in 2.70s]
+23:15:21  75 of 204 START test not_null_stg_olist_sellers_seller_city .................... [RUN]
+23:15:21  13 of 204 OK created sql incremental model prod_elementary.dbt_tests ........... [[32mSUCCESS 0[0m in 11.39s]
+23:15:21  76 of 204 START test not_null_stg_olist_sellers_seller_id ...................... [RUN]
+23:15:21  60 of 204 PASS accepted_values_stg_olist_order_payments_payment_type__credit_card__boleto__voucher__debit_card__not_defined  [[32mPASS[0m in 2.70s]
+23:15:21  77 of 204 START test not_null_stg_olist_sellers_seller_state ................... [RUN]
+23:15:21  58 of 204 PASS not_null_stg_olist_order_reviews_review_score ................... [[32mPASS[0m in 2.90s]
+23:15:21  78 of 204 START test not_null_stg_olist_sellers_seller_zip_code_prefix ......... [RUN]
+23:15:21  63 of 204 PASS not_null_stg_olist_order_payments_order_id ...................... [[32mPASS[0m in 2.40s]
+23:15:21  79 of 204 START test unique_stg_olist_sellers_seller_id ........................ [RUN]
+23:15:21  64 of 204 PASS not_null_stg_olist_order_payments_payment_installments .......... [[32mPASS[0m in 2.36s]
+23:15:21  80 of 204 START sql view model prod_elementary.alerts_dbt_source_freshness ..... [RUN]
+23:15:21  66 of 204 PASS not_null_stg_olist_order_payments_payment_type .................. [[32mPASS[0m in 2.16s]
+23:15:21  81 of 204 START test not_null_stg_product_category_name_translation_product_category_name  [RUN]
+23:15:21  65 of 204 PASS not_null_stg_olist_order_payments_payment_sequential ............ [[32mPASS[0m in 2.19s]
+23:15:21  82 of 204 START test not_null_stg_product_category_name_translation_product_category_name_english  [RUN]
+23:15:22  61 of 204 WARN 2 dbt_expectations_expect_column_values_to_be_between_stg_olist_order_payments_payment_installments__1  [[33mWARN 2[0m in 3.24s]
+23:15:22  83 of 204 START test unique_stg_product_category_name_translation_product_category_name  [RUN]
+23:15:22  80 of 204 OK created sql view model prod_elementary.alerts_dbt_source_freshness  [[32mSUCCESS 1[0m in 0.48s]
+23:15:22  85 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_description_length__0  [RUN]
+23:15:22  67 of 204 PASS not_null_stg_olist_order_payments_payment_value ................. [[32mPASS[0m in 2.61s]
+23:15:22  86 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_height_cm__0  [RUN]
+23:15:22  73 of 204 PASS not_null_stg_olist_orders_order_status .......................... [[32mPASS[0m in 1.69s]
+23:15:22  87 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_length_cm__0  [RUN]
+23:15:22  75 of 204 PASS not_null_stg_olist_sellers_seller_city .......................... [[32mPASS[0m in 1.88s]
+23:15:23  88 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_name_length__0  [RUN]
+23:15:23  69 of 204 PASS accepted_values_stg_olist_orders_order_status__delivered__shipped__canceled__invoiced__processing__unavailable__created__approved  [[32mPASS[0m in 2.87s]
+23:15:23  89 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_photos_qty__0  [RUN]
+23:15:23  76 of 204 PASS not_null_stg_olist_sellers_seller_id ............................ [[32mPASS[0m in 1.77s]
+23:15:23  90 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_weight_g__0  [RUN]
+23:15:23  70 of 204 PASS not_null_stg_olist_orders_customer_id ........................... [[32mPASS[0m in 2.70s]
+23:15:23  91 of 204 START test dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_width_cm__0  [RUN]
+23:15:23  74 of 204 PASS unique_stg_olist_orders_order_id ................................ [[32mPASS[0m in 2.08s]
+23:15:23  92 of 204 START test not_null_stg_olist_products_product_id .................... [RUN]
+23:15:23  71 of 204 PASS not_null_stg_olist_orders_order_id .............................. [[32mPASS[0m in 2.72s]
+23:15:23  93 of 204 START test unique_stg_olist_products_product_id ...................... [RUN]
+23:15:23  77 of 204 PASS not_null_stg_olist_sellers_seller_state ......................... [[32mPASS[0m in 1.93s]
+23:15:23  94 of 204 START snapshot snapshots.scd_customers ............................... [RUN]
+23:15:23  83 of 204 PASS unique_stg_product_category_name_translation_product_category_name  [[32mPASS[0m in 1.37s]
+23:15:23  95 of 204 START sql view model prod_elementary.model_run_results ............... [RUN]
+23:15:23  81 of 204 PASS not_null_stg_product_category_name_translation_product_category_name  [[32mPASS[0m in 1.50s]
+23:15:23  96 of 204 START sql view model prod_elementary.dbt_artifacts_hashes ............ [RUN]
+23:15:23  78 of 204 PASS not_null_stg_olist_sellers_seller_zip_code_prefix ............... [[32mPASS[0m in 1.95s]
+23:15:23  97 of 204 START unit_test int_order_payments_pivoted::test_int_order_payments_pivot_logic  [RUN]
+23:15:23  82 of 204 PASS not_null_stg_product_category_name_translation_product_category_name_english  [[32mPASS[0m in 1.66s]
+23:15:23  97 of 204 ERROR int_order_payments_pivoted::test_int_order_payments_pivot_logic  [[31mERROR[0m in 0.32s]
+23:15:23  98 of 204 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_boleto_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
+23:15:23  99 of 204 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_credit_card_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
+23:15:23  100 of 204 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_debit_card_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
+23:15:23  79 of 204 PASS unique_stg_olist_sellers_seller_id .............................. [[32mPASS[0m in 2.12s]
+23:15:23  101 of 204 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_total_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
+23:15:23  102 of 204 SKIP relation prod_dbt_test__audit.dbt_expectations_expect_column_values_to_be_between_int_order_payments_pivoted_voucher_amount__0 due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
+23:15:23  103 of 204 SKIP relation prod_dbt_test__audit.not_null_int_order_payments_pivoted_order_id due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
+23:15:23  104 of 204 SKIP relation prod_dbt_test__audit.not_null_int_order_payments_pivoted_total_amount due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
+23:15:23  105 of 204 SKIP relation prod_dbt_test__audit.unique_int_order_payments_pivoted_order_id due to ephemeral model status 'skipped'  [[31mERROR SKIP[0m]
+23:15:23  106 of 204 START snapshot snapshots.scd_sellers ................................ [RUN]
+23:15:23  95 of 204 OK created sql view model prod_elementary.model_run_results .......... [[32mSUCCESS 1[0m in 0.46s]
+23:15:23  72 of 204 PASS not_null_stg_olist_orders_order_purchase_timestamp .............. [[32mPASS[0m in 2.94s]
+23:15:23  107 of 204 START sql view model prod_elementary.alerts_dbt_models .............. [RUN]
+23:15:23  111 of 204 START unit_test dim_customers::test_dim_customers_order_metrics ..... [RUN]
+23:15:23  108 of 204 START sql table model prod_gold.dim_sellers ......................... [RUN]
+23:15:23  109 of 204 START sql table model prod_gold.fct_customer_reviews ................ [RUN]
+23:15:24  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['review_score']`
+23:15:24  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['total_orders_fulfilled', 'average_fulfillment_days']`
+23:15:24  96 of 204 OK created sql view model prod_elementary.dbt_artifacts_hashes ....... [[32mSUCCESS 1[0m in 0.79s]
+23:15:24  110 of 204 START sql table model prod_gold.fct_order_items ..................... [RUN]
+23:15:24  85 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_description_length__0  [[32mPASS[0m in 2.03s]
+23:15:24  112 of 204 SKIP unit_test test_fct_orders_aggregation .......................... [[33mSKIP[0m]
+23:15:24  113 of 204 SKIP relation prod_gold.fct_orders .................................. [[33mSKIP[0m]
+23:15:24  114 of 204 SKIP saved_query daily_order_performance ............................ [[33mSKIP[0m]
+23:15:24  115 of 204 SKIP test assert_delivered_date_is_after_purchase_date .............. [[33mSKIP[0m]
+23:15:24  116 of 204 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_orders_number_of_items__1  [[33mSKIP[0m]
+23:15:24  117 of 204 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_orders_total_freight_value__0  [[33mSKIP[0m]
+23:15:24  118 of 204 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_orders_total_payment_value__0  [[33mSKIP[0m]
+23:15:24  119 of 204 SKIP test dbt_expectations_expect_column_values_to_be_between_fct_orders_total_price__0  [[33mSKIP[0m]
+23:15:24  120 of 204 SKIP test elementary_column_anomalies_fct_orders_average__max__number_of_items__order_purchase_timestamp__month__3  [[33mSKIP[0m]
+23:15:24  121 of 204 SKIP test elementary_column_anomalies_fct_orders_null_rate__zero_rate__average__total_payment_value__order_purchase_timestamp__month__3  [[33mSKIP[0m]
+23:15:24  122 of 204 SKIP test elementary_column_anomalies_fct_orders_null_rate__zero_rate__average__total_price__order_purchase_timestamp__month__3  [[33mSKIP[0m]
+23:15:24  123 of 204 SKIP test elementary_dimension_anomalies_fct_orders_order_status__order_purchase_timestamp__month__3  [[33mSKIP[0m]
+23:15:24  124 of 204 SKIP test elementary_freshness_anomalies_fct_orders_order_purchase_timestamp__month__3  [[33mSKIP[0m]
+23:15:24  125 of 204 SKIP test elementary_volume_anomalies_fct_orders_3__order_purchase_timestamp__month__3  [[33mSKIP[0m]
+23:15:24  126 of 204 SKIP test not_null_fct_orders_customer_id ........................... [[33mSKIP[0m]
+23:15:24  127 of 204 SKIP test not_null_fct_orders_number_of_items ....................... [[33mSKIP[0m]
+23:15:24  128 of 204 SKIP test not_null_fct_orders_order_id .............................. [[33mSKIP[0m]
+23:15:24  129 of 204 SKIP test not_null_fct_orders_order_purchase_timestamp .............. [[33mSKIP[0m]
+23:15:24  86 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_height_cm__0  [[32mPASS[0m in 2.03s]
+23:15:24  130 of 204 SKIP test not_null_fct_orders_order_status .......................... [[33mSKIP[0m]
+23:15:24  131 of 204 SKIP test not_null_fct_orders_total_payment_value ................... [[33mSKIP[0m]
+23:15:24  132 of 204 SKIP test unique_fct_orders_order_id ................................ [[33mSKIP[0m]
+23:15:24  107 of 204 OK created sql view model prod_elementary.alerts_dbt_models ......... [[32mSUCCESS 1[0m in 0.59s]
+23:15:24  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['order_item_id']`
+23:15:24  91 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_width_cm__0  [[32mPASS[0m in 1.68s]
+23:15:25  87 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_length_cm__0  [[32mPASS[0m in 2.32s]
+23:15:25  92 of 204 PASS not_null_stg_olist_products_product_id .......................... [[32mPASS[0m in 1.87s]
+23:15:25  89 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_photos_qty__0  [[32mPASS[0m in 2.02s]
+23:15:25  90 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_weight_g__0  [[32mPASS[0m in 2.10s]
+23:15:25  111 of 204 PASS dim_customers::test_dim_customers_order_metrics ................ [[32mPASS[0m in 1.59s]
+23:15:25  133 of 204 START sql table model prod_gold.dim_customers ....................... [RUN]
+23:15:25  93 of 204 PASS unique_stg_olist_products_product_id ............................ [[32mPASS[0m in 2.39s]
+23:15:25  88 of 204 PASS dbt_expectations_expect_column_values_to_be_between_stg_olist_products_product_name_length__0  [[32mPASS[0m in 2.73s]
+23:15:25  134 of 204 START sql table model prod_gold.dim_products ........................ [RUN]
+23:15:25  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['number_of_orders']`
+23:15:26  94 of 204 OK snapshotted snapshots.scd_customers ............................... [[32mSUCCESS 99441[0m in 2.82s]
+23:15:26  Detected columns with numeric type and unspecified precision/scale, this can lead to unintended rounding: ['product_name_length', 'product_description_length', 'product_photos_qty', 'product_weight_g', 'product_length_cm', 'product_height_cm', 'product_width_cm', 'total_units_sold', 'average_review_score', 'total_reviews']`
+23:15:27  109 of 204 OK created sql table model prod_gold.fct_customer_reviews ........... [[32mSUCCESS 98410[0m in 3.17s]
+23:15:27  135 of 204 START test dbt_expectations_expect_column_values_to_be_between_fct_customer_reviews_review_score__5__1  [RUN]
+23:15:27  136 of 204 START test elementary_column_anomalies_fct_customer_reviews_average__null_rate__review_score__review_creation_date__month__3  [RUN]
+23:15:27  137 of 204 START test elementary_freshness_anomalies_fct_customer_reviews_review_creation_date__month__3  [RUN]
+23:15:27  138 of 204 START test elementary_volume_anomalies_fct_customer_reviews_review_creation_date__month__3  [RUN]
+23:15:27  139 of 204 START test not_null_fct_customer_reviews_customer_id ................ [RUN]
+23:15:27  140 of 204 START test not_null_fct_customer_reviews_order_id ................... [RUN]
+23:15:27  141 of 204 START test not_null_fct_customer_reviews_order_status ............... [RUN]
+23:15:27  142 of 204 START test not_null_fct_customer_reviews_review_id .................. [RUN]
+23:15:27  143 of 204 START test not_null_fct_customer_reviews_review_score ............... [RUN]
+23:15:27  144 of 204 START test unique_fct_customer_reviews_review_id .................... [RUN]
+23:15:27  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_CUSTOMER_REVIEWS
+23:15:27  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_CUSTOMER_REVIEWS
+23:15:27  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_CUSTOMER_REVIEWS review_score
+23:15:27  108 of 204 OK created sql table model prod_gold.dim_sellers .................... [[32mSUCCESS 3095[0m in 3.98s]
+23:15:27  145 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_sellers_average_freight_value__0  [RUN]
+23:15:27  146 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_sellers_average_fulfillment_days__0  [RUN]
+23:15:28  135 of 204 PASS dbt_expectations_expect_column_values_to_be_between_fct_customer_reviews_review_score__5__1  [[32mPASS[0m in 1.33s]
+23:15:28  147 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_sellers_total_orders_fulfilled__0  [RUN]
+23:15:28  142 of 204 PASS not_null_fct_customer_reviews_review_id ........................ [[32mPASS[0m in 1.43s]
+23:15:28  148 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_sellers_total_sales_value__0  [RUN]
+23:15:28  140 of 204 PASS not_null_fct_customer_reviews_order_id ......................... [[32mPASS[0m in 1.44s]
+23:15:28  141 of 204 PASS not_null_fct_customer_reviews_order_status ..................... [[32mPASS[0m in 1.44s]
+23:15:28  149 of 204 START test elementary_column_anomalies_dim_sellers_average__average_fulfillment_days  [RUN]
+23:15:28  150 of 204 START test elementary_column_anomalies_dim_sellers_average__max__total_sales_value  [RUN]
+23:15:28  143 of 204 PASS not_null_fct_customer_reviews_review_score ..................... [[32mPASS[0m in 1.50s]
+23:15:28  151 of 204 START test elementary_dimension_anomalies_dim_sellers_seller_state .. [RUN]
+23:15:28  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_SELLERS total_sales_value
+23:15:28  139 of 204 PASS not_null_fct_customer_reviews_customer_id ...................... [[32mPASS[0m in 1.68s]
+23:15:28  152 of 204 START test elementary_volume_anomalies_dim_sellers_ ................. [RUN]
+23:15:28  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_SELLERS
+23:15:28  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_SELLERS average_fulfillment_days
+23:15:28  145 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_sellers_average_freight_value__0  [[32mPASS[0m in 1.00s]
+23:15:28  153 of 204 START test not_null_dim_sellers_seller_city ......................... [RUN]
+23:15:29  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_SELLERS
+23:15:29  106 of 204 OK snapshotted snapshots.scd_sellers ................................ [[32mSUCCESS 0[0m in 5.37s]
+23:15:29  154 of 204 START test not_null_dim_sellers_seller_id ........................... [RUN]
+23:15:29  147 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_sellers_total_orders_fulfilled__0  [[32mPASS[0m in 0.82s]
+23:15:29  155 of 204 START test not_null_dim_sellers_seller_state ........................ [RUN]
+23:15:29  146 of 204 WARN 1 dbt_expectations_expect_column_values_to_be_between_dim_sellers_average_fulfillment_days__0  [[33mWARN 1[0m in 1.43s]
+23:15:29  156 of 204 START test not_null_dim_sellers_seller_zip_code_prefix .............. [RUN]
+23:15:29  133 of 204 OK created sql table model prod_gold.dim_customers .................. [[32mSUCCESS 99441[0m in 4.10s]
+23:15:29  148 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_sellers_total_sales_value__0  [[32mPASS[0m in 1.07s]
+23:15:29  157 of 204 START test unique_dim_sellers_seller_id ............................. [RUN]
+23:15:29  158 of 204 NO-OP saved query customer_retention_summary ........................ [[33mNO-OP[0m in 0.00s]
+23:15:29  159 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_customers_number_of_orders__0  [RUN]
+23:15:29  144 of 204 PASS unique_fct_customer_reviews_review_id .......................... [[32mPASS[0m in 2.67s]
+23:15:29  160 of 204 START test elementary_column_anomalies_dim_customers_average__max__number_of_orders  [RUN]
+23:15:29  110 of 204 OK created sql table model prod_gold.fct_order_items ................ [[32mSUCCESS 112650[0m in 5.54s]
+23:15:29  161 of 204 START test elementary_dimension_anomalies_dim_customers_customer_state  [RUN]
+23:15:29  153 of 204 PASS not_null_dim_sellers_seller_city ............................... [[32mPASS[0m in 0.95s]
+23:15:29  162 of 204 START test elementary_volume_anomalies_dim_customers_ ............... [RUN]
+23:15:29  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_CUSTOMERS
+23:15:29  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_CUSTOMERS number_of_orders
+23:15:29  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_CUSTOMERS
+23:15:30  155 of 204 PASS not_null_dim_sellers_seller_state .............................. [[32mPASS[0m in 0.84s]
+23:15:30  163 of 204 START test not_null_dim_customers_customer_city ..................... [RUN]
+23:15:30  156 of 204 PASS not_null_dim_sellers_seller_zip_code_prefix .................... [[32mPASS[0m in 0.84s]
+23:15:30  164 of 204 START test not_null_dim_customers_customer_id ....................... [RUN]
+23:15:30  157 of 204 PASS unique_dim_sellers_seller_id ................................... [[32mPASS[0m in 0.83s]
+23:15:30  165 of 204 START test not_null_dim_customers_customer_state .................... [RUN]
+23:15:30  159 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_customers_number_of_orders__0  [[32mPASS[0m in 0.97s]
+23:15:30  166 of 204 START test not_null_dim_customers_customer_unique_id ................ [RUN]
+23:15:30  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_SELLERS average_fulfillment_days
+23:15:30  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_CUSTOMER_REVIEWS
+23:15:30  154 of 204 PASS not_null_dim_sellers_seller_id ................................. [[32mPASS[0m in 1.55s]
+23:15:30  167 of 204 START test not_null_dim_customers_customer_zip_code_prefix .......... [RUN]
+23:15:30  163 of 204 PASS not_null_dim_customers_customer_city ........................... [[32mPASS[0m in 0.76s]
+23:15:30  168 of 204 START test not_null_dim_customers_number_of_orders .................. [RUN]
+23:15:31  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_column_anomalies_dim_sellers_average__average_fulfillment_days.7a195ea411`
+23:15:31  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_SELLERS
+23:15:31  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_SELLERS
+23:15:31  134 of 204 OK created sql table model prod_gold.dim_products ................... [[32mSUCCESS 32951[0m in 5.45s]
+23:15:31  169 of 204 START test unique_dim_customers_customer_id ......................... [RUN]
+23:15:31  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_CUSTOMER_REVIEWS
+23:15:31  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_SELLERS total_sales_value
+23:15:31  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_CUSTOMER_REVIEWS review_score
+23:15:31  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_volume_anomalies_dim_sellers_.251a315ae9`
+23:15:31  166 of 204 PASS not_null_dim_customers_customer_unique_id ...................... [[32mPASS[0m in 0.88s]
+23:15:31  170 of 204 START test unique_dim_customers_customer_unique_id .................. [RUN]
+23:15:31  164 of 204 PASS not_null_dim_customers_customer_id ............................. [[32mPASS[0m in 1.34s]
+23:15:31  171 of 204 SKIP test relationships_fct_orders_customer_id__customer_id__ref_dim_customers_  [[33mSKIP[0m]
+23:15:31  172 of 204 NO-OP saved query daily_items_and_gmv ............................... [[33mNO-OP[0m in 0.00s]
+23:15:31  173 of 204 START test dbt_expectations_expect_column_values_to_be_between_fct_order_items_freight_value__0  [RUN]
+23:15:31  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_column_anomalies_dim_sellers_average__max__total_sales_value.a99b08d3da`
+23:15:31  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_column_anomalies_dim_sellers_average__max__total_sales_value.a99b08d3da`
+23:15:31  168 of 204 PASS not_null_dim_customers_number_of_orders ........................ [[32mPASS[0m in 0.90s]
+23:15:31  174 of 204 START test dbt_expectations_expect_column_values_to_be_between_fct_order_items_price__0  [RUN]
+23:15:32  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_CUSTOMERS
+23:15:32  137 of 204 PASS elementary_freshness_anomalies_fct_customer_reviews_review_creation_date__month__3  [[32mPASS[0m in 5.11s]
+23:15:32  175 of 204 START test elementary_column_anomalies_fct_order_items_average__null_rate__freight_value__order_purchase_timestamp__month__3  [RUN]
+23:15:32  169 of 204 PASS unique_dim_customers_customer_id ............................... [[32mPASS[0m in 1.04s]
+23:15:32  176 of 204 START test elementary_column_anomalies_fct_order_items_average__zero_rate__price__order_purchase_timestamp__month__3  [RUN]
+23:15:32  167 of 204 PASS not_null_dim_customers_customer_zip_code_prefix ................ [[32mPASS[0m in 1.46s]
+23:15:32  149 of 204 PASS elementary_column_anomalies_dim_sellers_average__average_fulfillment_days  [[32mPASS[0m in 3.69s]
+23:15:32  177 of 204 START test elementary_freshness_anomalies_fct_order_items_order_purchase_timestamp__month__3  [RUN]
+23:15:32  178 of 204 START test elementary_volume_anomalies_fct_order_items_order_purchase_timestamp__month__3  [RUN]
+23:15:32  165 of 204 PASS not_null_dim_customers_customer_state .......................... [[32mPASS[0m in 1.88s]
+23:15:32  179 of 204 START test not_null_fct_order_items_customer_id ..................... [RUN]
+23:15:32  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_CUSTOMERS number_of_orders
+23:15:32  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_ORDER_ITEMS
+23:15:32  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_ORDER_ITEMS
+23:15:32  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_ORDER_ITEMS freight_value
+23:15:32  152 of 204 PASS elementary_volume_anomalies_dim_sellers_ ....................... [[32mPASS[0m in 3.75s]
+23:15:32  180 of 204 START test not_null_fct_order_items_order_id ........................ [RUN]
+23:15:32  151 of 204 PASS elementary_dimension_anomalies_dim_sellers_seller_state ........ [[32mPASS[0m in 3.96s]
+23:15:32  181 of 204 START test not_null_fct_order_items_order_item_id ................... [RUN]
+23:15:32  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_ORDER_ITEMS price
+23:15:32  173 of 204 PASS dbt_expectations_expect_column_values_to_be_between_fct_order_items_freight_value__0  [[32mPASS[0m in 1.06s]
+23:15:32  182 of 204 START test not_null_fct_order_items_order_purchase_timestamp ........ [RUN]
+23:15:32  170 of 204 WARN 2997 unique_dim_customers_customer_unique_id ................... [[33mWARN 2997[0m in 1.13s]
+23:15:32  183 of 204 START test not_null_fct_order_items_order_status .................... [RUN]
+23:15:32  150 of 204 PASS elementary_column_anomalies_dim_sellers_average__max__total_sales_value  [[32mPASS[0m in 4.11s]
+23:15:32  184 of 204 START test not_null_fct_order_items_price ........................... [RUN]
+23:15:32  136 of 204 PASS elementary_column_anomalies_fct_customer_reviews_average__null_rate__review_score__review_creation_date__month__3  [[32mPASS[0m in 5.64s]
+23:15:32  185 of 204 START test not_null_fct_order_items_product_id ...................... [RUN]
+23:15:32  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_CUSTOMERS
+23:15:32  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_column_anomalies_dim_customers_average__max__number_of_orders.4522de80fb`
+23:15:32  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_column_anomalies_dim_customers_average__max__number_of_orders.4522de80fb`
+23:15:33  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_volume_anomalies_dim_customers_.bd84cf25d8`
+23:15:33  179 of 204 PASS not_null_fct_order_items_customer_id ........................... [[32mPASS[0m in 0.96s]
+23:15:33  186 of 204 START test not_null_fct_order_items_seller_id ....................... [RUN]
+23:15:33  138 of 204 PASS elementary_volume_anomalies_fct_customer_reviews_review_creation_date__month__3  [[32mPASS[0m in 6.24s]
+23:15:33  187 of 204 START test assert_dim_products_sales_match_order_items .............. [RUN]
+23:15:33  181 of 204 PASS not_null_fct_order_items_order_item_id ......................... [[32mPASS[0m in 0.82s]
+23:15:33  161 of 204 PASS elementary_dimension_anomalies_dim_customers_customer_state .... [[32mPASS[0m in 3.58s]
+23:15:33  188 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_average_review_score__5__1  [RUN]
+23:15:33  189 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_product_description_length__0  [RUN]
+23:15:33  184 of 204 PASS not_null_fct_order_items_price ................................. [[32mPASS[0m in 0.76s]
+23:15:33  190 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_product_height_cm__0  [RUN]
+23:15:33  174 of 204 PASS dbt_expectations_expect_column_values_to_be_between_fct_order_items_price__0  [[32mPASS[0m in 1.85s]
+23:15:33  191 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_product_length_cm__0  [RUN]
+23:15:33  185 of 204 PASS not_null_fct_order_items_product_id ............................ [[32mPASS[0m in 0.93s]
+23:15:33  192 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_product_name_length__0  [RUN]
+23:15:33  182 of 204 PASS not_null_fct_order_items_order_purchase_timestamp .............. [[32mPASS[0m in 1.19s]
+23:15:33  193 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_product_photos_qty__0  [RUN]
+23:15:33  160 of 204 PASS elementary_column_anomalies_dim_customers_average__max__number_of_orders  [[32mPASS[0m in 4.05s]
+23:15:33  194 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_product_weight_g__0  [RUN]
+23:15:34  162 of 204 PASS elementary_volume_anomalies_dim_customers_ ..................... [[32mPASS[0m in 4.14s]
+23:15:34  195 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_product_width_cm__0  [RUN]
+23:15:34  183 of 204 PASS not_null_fct_order_items_order_status .......................... [[32mPASS[0m in 1.40s]
+23:15:34  196 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_total_revenue_generated__0  [RUN]
+23:15:34  180 of 204 PASS not_null_fct_order_items_order_id .............................. [[32mPASS[0m in 1.74s]
+23:15:34  197 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_total_reviews__0  [RUN]
+23:15:34  189 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_product_description_length__0  [[32mPASS[0m in 0.90s]
+23:15:34  198 of 204 START test dbt_expectations_expect_column_values_to_be_between_dim_products_total_units_sold__0  [RUN]
+23:15:34  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_ORDER_ITEMS price
+23:15:34  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_ORDER_ITEMS freight_value
+23:15:34  190 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_product_height_cm__0  [[32mPASS[0m in 1.11s]
+23:15:34  191 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_product_length_cm__0  [[32mPASS[0m in 0.93s]
+23:15:34  199 of 204 START test elementary_column_anomalies_dim_products_average__average_review_score  [RUN]
+23:15:34  200 of 204 START test elementary_column_anomalies_dim_products_average__max__total_revenue_generated  [RUN]
+23:15:34  188 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_average_review_score__5__1  [[32mPASS[0m in 1.21s]
+23:15:34  201 of 204 START test elementary_dimension_anomalies_dim_products_product_category_name_english  [RUN]
+23:15:34  192 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_product_name_length__0  [[32mPASS[0m in 1.01s]
+23:15:34  202 of 204 START test elementary_volume_anomalies_dim_products_ ................ [RUN]
+23:15:34  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_PRODUCTS
+23:15:34  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_PRODUCTS total_revenue_generated
+23:15:34  194 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_product_weight_g__0  [[32mPASS[0m in 0.92s]
+23:15:34  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_PRODUCTS average_review_score
+23:15:34  203 of 204 START test not_null_dim_products_product_id ......................... [RUN]
+23:15:34  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_ORDER_ITEMS
+23:15:34  Elementary: Started running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_PRODUCTS
+23:15:34  196 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_total_revenue_generated__0  [[32mPASS[0m in 0.87s]
+23:15:34  204 of 204 START test unique_dim_products_product_id ........................... [RUN]
+23:15:35  193 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_product_photos_qty__0  [[32mPASS[0m in 1.26s]
+23:15:35  186 of 204 PASS not_null_fct_order_items_seller_id ............................. [[32mPASS[0m in 1.97s]
+23:15:35  195 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_product_width_cm__0  [[32mPASS[0m in 1.28s]
+23:15:35  197 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_total_reviews__0  [[32mPASS[0m in 1.22s]
+23:15:35  198 of 204 PASS dbt_expectations_expect_column_values_to_be_between_dim_products_total_units_sold__0  [[32mPASS[0m in 1.21s]
+23:15:35  187 of 204 PASS assert_dim_products_sales_match_order_items .................... [[32mPASS[0m in 2.24s]
+23:15:35  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.FCT_ORDER_ITEMS
+23:15:35  204 of 204 PASS unique_dim_products_product_id ................................. [[32mPASS[0m in 1.07s]
+23:15:36  203 of 204 PASS not_null_dim_products_product_id ............................... [[32mPASS[0m in 1.25s]
+23:15:36  176 of 204 PASS elementary_column_anomalies_fct_order_items_average__zero_rate__price__order_purchase_timestamp__month__3  [[32mPASS[0m in 3.87s]
+23:15:36  175 of 204 PASS elementary_column_anomalies_fct_order_items_average__null_rate__freight_value__order_purchase_timestamp__month__3  [[32mPASS[0m in 3.99s]
+23:15:36  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_PRODUCTS average_review_score
+23:15:36  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_PRODUCTS
+23:15:37  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_PRODUCTS total_revenue_generated
+23:15:37  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_column_anomalies_dim_products_average__average_review_score.7ae6f83652`
+23:15:37  177 of 204 PASS elementary_freshness_anomalies_fct_order_items_order_purchase_timestamp__month__3  [[32mPASS[0m in 4.82s]
+23:15:37  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_column_anomalies_dim_products_average__max__total_revenue_generated.4284ed3a78`
+23:15:37  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_column_anomalies_dim_products_average__max__total_revenue_generated.4284ed3a78`
+23:15:37  Elementary: Finished running data monitors on: OLIST_LAKEHOUSE_PROD.PROD_GOLD.DIM_PRODUCTS
+23:15:37  178 of 204 PASS elementary_volume_anomalies_fct_order_items_order_purchase_timestamp__month__3  [[32mPASS[0m in 5.16s]
+23:15:37  Elementary: Not enough data to calculate anomaly scores on `test.olist_lakehouse.elementary_volume_anomalies_dim_products_.d4ea30b2d4`
+23:15:38  199 of 204 PASS elementary_column_anomalies_dim_products_average__average_review_score  [[32mPASS[0m in 3.53s]
+23:15:38  200 of 204 PASS elementary_column_anomalies_dim_products_average__max__total_revenue_generated  [[32mPASS[0m in 4.00s]
+23:15:38  202 of 204 PASS elementary_volume_anomalies_dim_products_ ...................... [[32mPASS[0m in 4.02s]
+23:15:38  201 of 204 PASS elementary_dimension_anomalies_dim_products_product_category_name_english  [[32mPASS[0m in 4.36s]
+23:15:38  
+23:16:16  1 of 1 START hook: elementary.on-run-end.0 ..................................... [RUN]
+23:16:16  1 of 1 OK hook: elementary.on-run-end.0 ........................................ [[32mOK[0m in 37.07s]
+23:16:19  
+23:16:19
+23:16:19  Finished running 17 incremental models, 2 project hooks, 3 saved queries, 2 snapshots, 7 table models, 149 data tests, 4 unit tests, 22 view models in 0 hours 1 minutes and 17.49 seconds (77.49s).
+23:16:19  
+23:16:19
+23:16:19  [31mCompleted with 9 errors, 0 partial successes, and 4 warnings:[0m
+23:16:19  
+23:16:19
+23:16:19  [31mFailure in unit_test test_int_order_payments_pivot_logic (tests/unit_tests.yml)[0m
+23:16:19
+23:16:19    Runtime Error in unit_test test_int_order_payments_pivot_logic (tests/unit_tests.yml)
+  An error occurred during execution of unit test 'test_int_order_payments_pivot_logic'. There may be an error in the unit test definition: check the data types.
+   Database Error
+    002003 (02000): SQL compilation error:
+    Schema 'OLIST_LAKEHOUSE_PROD.PROD' does not exist or not authorized.
+23:16:19  
+23:16:19
+23:16:19  [33mWarning in test unique_stg_olist_customers_customer_unique_id (models/staging/schema.yml)[0m
+23:16:19  Got 2997 results, configured to warn if != 0
+23:16:19  
+23:16:19
+23:16:19    compiled code at target/compiled/olist_lakehouse/models/staging/schema.yml/unique_stg_olist_customers_customer_unique_id.sql
+23:16:19  
+23:16:19
+23:16:19    See test failures:
+  -----------------------------------------------------------------------------------------------------
+  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.unique_stg_olist_customers_customer_unique_id
+  -----------------------------------------------------------------------------------------------------
+23:16:19  
+23:16:19
+23:16:19  [33mWarning in test dbt_expectations_expect_column_values_to_be_between_stg_olist_order_payments_payment_installments__1 (models/staging/schema.yml)[0m
+23:16:19  Got 2 results, configured to warn if != 0
+23:16:19  
+23:16:19
+23:16:19    compiled code at target/compiled/olist_lakehouse/models/staging/schema.yml/dbt_expectations_expect_column_f7cd60db176bbdc8eb9b85b376cfda3c.sql
+23:16:19  
+23:16:19
+23:16:19    See test failures:
   -----------------------------------------------------------------------------------------------------------------------
-  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.elementary_source_schema_chang_642cfef3970304140cf27f825b094038
+  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.dbt_expectations_expect_column_f7cd60db176bbdc8eb9b85b376cfda3c
   -----------------------------------------------------------------------------------------------------------------------
-22:57:06  
-22:57:06
-22:57:06  [31mFailure in test elementary_source_schema_changes_raw_bronze_olist_geolocation_dataset_ (models/staging/sources.yml)[0m
-22:57:06
-22:57:06    Database Error in test elementary_source_schema_changes_raw_bronze_olist_geolocation_dataset_ (models/staging/sources.yml)
-  001003 (42000): SQL compilation error:
-  syntax error line 93 at position 8 unexpected 'select'.
-  syntax error line 93 at position 32 unexpected 'from'.
-  syntax error line 101 at position 8 unexpected 'where'.
-  syntax error line 101 at position 29 unexpected 'select'.
-  syntax error line 101 at position 40 unexpected 'detected_at'.
-  syntax error line 101 at position 53 unexpected 'from'.
-22:57:06  
-22:57:06
-22:57:06    See test failures:
+23:16:19  
+23:16:19
+23:16:19  [33mWarning in test dbt_expectations_expect_column_values_to_be_between_dim_sellers_average_fulfillment_days__0 (models/marts/dim_sellers.yml)[0m
+23:16:19  Got 1 result, configured to warn if != 0
+23:16:19  
+23:16:19
+23:16:19    compiled code at target/compiled/olist_lakehouse/models/marts/dim_sellers.yml/dbt_expectations_expect_column_bdb4af65eab15342b0180f0cd53395c3.sql
+23:16:19  
+23:16:19
+23:16:19    See test failures:
   -----------------------------------------------------------------------------------------------------------------------
-  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.elementary_source_schema_chang_a0b88c32f65195955e010054fb164665
+  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.dbt_expectations_expect_column_bdb4af65eab15342b0180f0cd53395c3
   -----------------------------------------------------------------------------------------------------------------------
-22:57:06  
-22:57:06
-22:57:06  [31mFailure in test elementary_source_schema_changes_raw_bronze_olist_order_items_dataset_ (models/staging/sources.yml)[0m
-22:57:06
-22:57:06    Database Error in test elementary_source_schema_changes_raw_bronze_olist_order_items_dataset_ (models/staging/sources.yml)
-  001003 (42000): SQL compilation error:
-  syntax error line 107 at position 8 unexpected 'select'.
-  syntax error line 107 at position 32 unexpected 'from'.
-  syntax error line 115 at position 8 unexpected 'where'.
-  syntax error line 115 at position 29 unexpected 'select'.
-  syntax error line 115 at position 40 unexpected 'detected_at'.
-  syntax error line 115 at position 53 unexpected 'from'.
-22:57:06  
-22:57:06
-22:57:06    See test failures:
-  -----------------------------------------------------------------------------------------------------------------------
-  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.elementary_source_schema_chang_8227a57a42aa617349b37297547344af
-  -----------------------------------------------------------------------------------------------------------------------
-22:57:06  
-22:57:06
-22:57:06  [31mFailure in test elementary_source_schema_changes_raw_bronze_olist_order_payments_dataset_ (models/staging/sources.yml)[0m
-22:57:06
-22:57:06    Database Error in test elementary_source_schema_changes_raw_bronze_olist_order_payments_dataset_ (models/staging/sources.yml)
-  001003 (42000): SQL compilation error:
-  syntax error line 93 at position 8 unexpected 'select'.
-  syntax error line 93 at position 32 unexpected 'from'.
-  syntax error line 101 at position 8 unexpected 'where'.
-  syntax error line 101 at position 29 unexpected 'select'.
-  syntax error line 101 at position 40 unexpected 'detected_at'.
-  syntax error line 101 at position 53 unexpected 'from'.
-22:57:06  
-22:57:06
-22:57:06    See test failures:
-  -----------------------------------------------------------------------------------------------------------------------
-  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.elementary_source_schema_chang_da4b85a048026ead3be7e9dfe98c55b5
-  -----------------------------------------------------------------------------------------------------------------------
-22:57:06  
-22:57:06
-22:57:06  [31mFailure in test elementary_source_schema_changes_raw_bronze_olist_orders_dataset_ (models/staging/sources.yml)[0m
-22:57:06
-22:57:06    Database Error in test elementary_source_schema_changes_raw_bronze_olist_orders_dataset_ (models/staging/sources.yml)
-  001003 (42000): SQL compilation error:
-  syntax error line 114 at position 8 unexpected 'select'.
-  syntax error line 114 at position 32 unexpected 'from'.
-  syntax error line 122 at position 8 unexpected 'where'.
-  syntax error line 122 at position 29 unexpected 'select'.
-  syntax error line 122 at position 40 unexpected 'detected_at'.
-  syntax error line 122 at position 53 unexpected 'from'.
-22:57:06  
-22:57:06
-22:57:06    See test failures:
-  -----------------------------------------------------------------------------------------------------------------------
-  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.elementary_source_schema_chang_bb80dd1524af64fe21c2aa286ae6ce54
-  -----------------------------------------------------------------------------------------------------------------------
-22:57:06  
-22:57:06
-22:57:06  [31mFailure in test elementary_source_schema_changes_raw_bronze_olist_order_reviews_dataset_ (models/staging/sources.yml)[0m
-22:57:06
-22:57:06    Database Error in test elementary_source_schema_changes_raw_bronze_olist_order_reviews_dataset_ (models/staging/sources.yml)
-  001003 (42000): SQL compilation error:
-  syntax error line 107 at position 8 unexpected 'select'.
-  syntax error line 107 at position 32 unexpected 'from'.
-  syntax error line 115 at position 8 unexpected 'where'.
-  syntax error line 115 at position 29 unexpected 'select'.
-  syntax error line 115 at position 40 unexpected 'detected_at'.
-  syntax error line 115 at position 53 unexpected 'from'.
-22:57:06  
-22:57:06
-22:57:06    See test failures:
-  -----------------------------------------------------------------------------------------------------------------------
-  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.elementary_source_schema_chang_a8243f5c687e17649c2395496f1c2ee2
-  -----------------------------------------------------------------------------------------------------------------------
-22:57:06  
-22:57:06
-22:57:06  Done. PASS=58 WARN=0 ERROR=6 SKIP=151 NO-OP=0 TOTAL=215
-22:57:06  [[33mWARNING[0m][DeprecationsSummary]: Deprecated functionality
+23:16:19  
+23:16:19
+23:16:19  [33mWarning in test unique_dim_customers_customer_unique_id (models/marts/dim_customers.yml)[0m
+23:16:19  Got 2997 results, configured to warn if != 0
+23:16:19  
+23:16:19
+23:16:19    compiled code at target/compiled/olist_lakehouse/models/marts/dim_customers.yml/unique_dim_customers_customer_unique_id.sql
+23:16:19  
+23:16:19
+23:16:19    See test failures:
+  -----------------------------------------------------------------------------------------------
+  select * from OLIST_LAKEHOUSE_prod.prod_dbt_test__audit.unique_dim_customers_customer_unique_id
+  -----------------------------------------------------------------------------------------------
+23:16:19  
+23:16:19
+23:16:19  Done. PASS=169 WARN=4 ERROR=1 SKIP=30 NO-OP=2 TOTAL=206
+23:16:19  [[33mWARNING[0m][DeprecationsSummary]: Deprecated functionality
 Summary of encountered deprecations:
-- CustomKeyInConfigDeprecation: 1 occurrence
-- MissingArgumentsPropertyInGenericTestDeprecation: 21 occurrences
+- MissingArgumentsPropertyInGenericTestDeprecation: 11 occurrences
 - MFTimespineWithoutYamlConfigurationDeprecation: 1 occurrence
 - MicrobatchMacroOutsideOfBatchesDeprecation: 1 occurrence
 To see all deprecation instances instead of just the first occurrence of each,
