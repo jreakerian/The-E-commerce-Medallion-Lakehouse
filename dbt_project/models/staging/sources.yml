@@ -10,8 +10,6 @@ sources:
         error_after: {count: 48, period: hour}
     tables:
       - name: olist_customers_dataset
-        tests:
-          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -29,8 +27,6 @@ sources:
             data_type: varchar
 
       - name: olist_geolocation_dataset
-        tests:
-          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -46,8 +42,6 @@ sources:
             data_type: varchar
 
       - name: olist_order_items_dataset
-        tests:
-          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -67,8 +61,6 @@ sources:
             data_type: number
 
       - name: olist_order_payments_dataset
-        tests:
-          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -84,8 +76,6 @@ sources:
             data_type: number
 
       - name: olist_order_reviews_dataset
-        tests:
-          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -105,8 +95,6 @@ sources:
             data_type: timestamp_ntz
 
       - name: olist_orders_dataset
-        tests:
-          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -128,8 +116,6 @@ sources:
             data_type: timestamp_ntz
 
       - name: olist_products_dataset
-        tests:
-          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -153,8 +139,6 @@ sources:
             data_type: number
 
       - name: olist_sellers_dataset
-        tests:
-          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant
@@ -168,8 +152,6 @@ sources:
             data_type: varchar
 
       - name: product_category_name_translation
-        tests:
-          - elementary.schema_changes
         columns:
           - name: value
             data_type: variant

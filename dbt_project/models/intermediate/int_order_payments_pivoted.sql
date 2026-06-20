@@ -1,3 +1,5 @@
+{{ config(materialized='view') }}
+
 {%- set payment_methods = ['boleto', 'credit_card', 'voucher', 'debit_card'] -%}
 
 with payments as (
