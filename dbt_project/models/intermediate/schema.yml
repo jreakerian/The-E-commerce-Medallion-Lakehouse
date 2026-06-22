@@ -3,6 +3,9 @@ version: 2
 models:
   - name: int_order_payments_pivoted
     description: "Pivoted payment amounts by payment type per order."
+    config:
+      contract:
+        enforced: true
     columns:
       - name: order_id
         data_type: varchar
