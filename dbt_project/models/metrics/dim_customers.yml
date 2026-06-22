@@ -68,4 +68,4 @@ saved_queries:
       - name: customer_retention_summary
         config:
           export_as: table
-          schema: gold
+          schema: "{{ 'prod_gold' if target.name == 'prod' else 'dev_gold' }}"

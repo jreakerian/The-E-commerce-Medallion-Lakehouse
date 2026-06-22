@@ -22,6 +22,9 @@ clean-targets:         #directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+flags:
+  require_batched_execution_for_custom_microbatch_strategy: true
+
 # Enable contracts for schema enforcement
 #contracts:
 #  enabled: true
