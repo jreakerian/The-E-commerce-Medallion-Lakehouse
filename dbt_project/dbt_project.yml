@@ -37,6 +37,7 @@ flags:
 # files using the `{{ config(...) }}` macro.
 models:
   elementary:
+    +enabled: "{{ target.name == 'prod'}}"
     +schema: "elementary"
   olist_lakehouse:
     staging:
@@ -45,7 +46,7 @@ models:
       +contract:
         enforced: true
     intermediate:
-      +materialized: ephemeral # Ephemeral models are CTEs, not stored in the DB
+      +materialized: ephemeral
       +contract:
         enforced: true
     marts:
