@@ -33,19 +33,12 @@ unit_tests:
              seller_id: "sell_2", shipping_limit_date: "2023-06-18 00:00:00",
              price: 49.99, freight_value: 10.00}
           # ord_002 has no items (tests COALESCE)
-      - input: ref('stg_olist_order_payments')
-        rows:
-          # ord_001: two credit card payments + one boleto = 175.49 total
-          - {order_id: "ord_001", payment_sequential: 1,
-             payment_type: "credit_card", payment_installments: 3,
-             payment_value: 100.00}
-          - {order_id: "ord_001", payment_sequential: 2,
-             payment_type: "credit_card", payment_installments: 1,
-             payment_value: 50.00}
-          - {order_id: "ord_001", payment_sequential: 3,
-             payment_type: "boleto", payment_installments: 1,
-             payment_value: 25.49}
-          # ord_002 has no payments (tests COALESCE)
+      - input: ref('int_order_payments_pivoted')
+        format: sql
+        rows: |
+          select 'ord_001' as order_id, 175.49 as total_amount
+          union all
+          select 'ord_002' as order_id, 0.00 as total_amount
     expect:
       rows:
         - {order_id: "ord_001", customer_id: "cust_A", order_status: "delivered",
