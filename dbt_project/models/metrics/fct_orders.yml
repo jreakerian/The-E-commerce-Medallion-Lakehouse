@@ -107,4 +107,4 @@ saved_queries:
       - name: daily_order_performance
         config:
           export_as: table
-          schema: gold
+          schema: "{{ 'prod_gold' if target.name == 'prod' else 'dev_gold' }}"

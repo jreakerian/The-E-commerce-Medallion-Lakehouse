@@ -60,4 +60,4 @@ saved_queries:
       - name: daily_items_and_gmv
         config:
           export_as: table
-          schema: gold
+          schema: "{{ 'prod_gold' if target.name == 'prod' else 'dev_gold' }}"
