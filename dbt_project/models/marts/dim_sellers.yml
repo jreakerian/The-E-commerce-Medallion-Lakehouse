@@ -12,8 +12,9 @@ models:
 
       # -- Dimension: detect distribution shifts in seller_state --
       - elementary.dimension_anomalies:
-          dimensions:
-            - seller_state
+          arguments:
+            dimensions:
+              - seller_state
 
     columns:
       - name: seller_id
