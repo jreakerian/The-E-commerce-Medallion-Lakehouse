@@ -12,8 +12,9 @@ models:
 
       # -- Dimension: detect distribution shifts in product categories --
       - elementary.dimension_anomalies:
-          dimensions:
-            - product_category_name_english
+          arguments:
+            dimensions:
+              - product_category_name_english
 
     columns:
       - name: product_id
