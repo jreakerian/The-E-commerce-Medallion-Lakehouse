@@ -44,13 +44,9 @@ models:
 
       - name: customer_id
         data_type: varchar
-        description: "Foreign key to the customers dimension table."
+        description: "Per-order customer key from source. Resolves to customer_unique_id via stg_olist_customers."
         tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_customers')
-                field: customer_id
 
       - name: order_status
         data_type: varchar
