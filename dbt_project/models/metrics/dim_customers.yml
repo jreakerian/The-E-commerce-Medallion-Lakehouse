@@ -17,10 +17,10 @@ semantic_models:
         type: categorical
     measures:
       - name: unique_customers
-        expr: customer_id
+        expr: customer_unique_id
         agg: count_distinct
       - name: returning_customers_measure
-        expr: case when number_of_orders > 1 then customer_id else null end
+        expr: case when number_of_orders > 1 then customer_unique_id else null end
         agg: count_distinct
 
 metrics:
