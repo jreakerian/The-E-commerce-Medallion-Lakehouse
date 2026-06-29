@@ -54,8 +54,9 @@ unit_tests:
   - name: test_dim_customers_order_metrics
     description: >
       Verify that dim_customers correctly computes first_order_date,
-      most_recent_order_date, and number_of_orders. Also ensures customers
-      with no orders get COALESCE'd to 0 orders.
+      most_recent_order_date, and number_of_orders per unique physical customer
+      (customer_unique_id). Also ensures customers with no orders get
+      COALESCE'd to 0 orders. customer_id is no longer an output column.
     model: dim_customers
     given:
       - input: ref('stg_olist_customers')
@@ -88,19 +89,19 @@ unit_tests:
           # cust_C has no orders (tests COALESCE)
     expect:
       rows:
-        - {customer_id: "cust_A", customer_unique_id: "uniq_A",
+        - {customer_unique_id: "uniq_A",
            customer_zip_code_prefix: "01310", customer_city: "sao paulo",
            customer_state: "SP",
            first_order_date: "2023-01-15 10:00:00",
            most_recent_order_date: "2023-06-20 14:00:00",
            number_of_orders: 2}
-        - {customer_id: "cust_B", customer_unique_id: "uniq_B",
+        - {customer_unique_id: "uniq_B",
            customer_zip_code_prefix: "20040", customer_city: "rio de janeiro",
            customer_state: "RJ",
            first_order_date: "2023-03-10 09:00:00",
            most_recent_order_date: "2023-03-10 09:00:00",
            number_of_orders: 1}
-        - {customer_id: "cust_C", customer_unique_id: "uniq_C",
+        - {customer_unique_id: "uniq_C",
            customer_zip_code_prefix: "30130", customer_city: "belo horizonte",
            customer_state: "MG",
            first_order_date: null,

@@ -17,16 +17,9 @@ models:
               - customer_state
 
     columns:
-      - name: customer_id
-        data_type: varchar
-        description: "The unique identifier for a customer (used for order joining)."
-        tests:
-          - unique
-          - not_null
-
       - name: customer_unique_id
         data_type: varchar
-        description: "The business key for a customer."
+        description: "Primary key. Persistent identifier for a unique physical customer. One row per person."
         tests:
           - unique
           - not_null
