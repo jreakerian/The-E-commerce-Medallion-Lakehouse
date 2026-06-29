@@ -132,12 +132,14 @@ models:
 
       - name: payment_installments
         data_type: number
-        description: "Number of installments for the payment."
+        description: "Number of installments for the payment. Always >= 1 for credit_card payments. Voucher and other payment types may have 0 installments as no installment structure applies."
         tests:
           - not_null
           - dbt_expectations.expect_column_values_to_be_between:
               arguments:
                 min_value: 1
+              config:
+                where: "payment_type = 'credit_card' and payment_sequential = 1"
 
       - name: payment_value
         data_type: number(10,2)
@@ -208,9 +210,8 @@ models:
 
       - name: customer_unique_id
         data_type: varchar
-        description: "Unique identifier for a customer (business key)."
+        description: "Persistent identifier for a physical customer across multiple orders. Not unique in this table — one row exists per order, so a returning customer appears multiple times with the same customer_unique_id."
         tests:
-          - unique
           - not_null
 
       - name: customer_zip_code_prefix

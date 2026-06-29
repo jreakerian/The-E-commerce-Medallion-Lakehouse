@@ -12,8 +12,9 @@ models:
 
       # -- Dimension: detect distribution shifts in customer_state --
       - elementary.dimension_anomalies:
-          dimensions:
-            - customer_state
+          arguments:
+            dimensions:
+              - customer_state
 
     columns:
       - name: customer_id

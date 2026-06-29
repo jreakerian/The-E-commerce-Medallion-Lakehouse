@@ -9,17 +9,19 @@ models:
     tests:
       # -- Volume: detect unexpected row count spikes/drops --
       - elementary.volume_anomalies:
-          timestamp_column: review_creation_date
-          training_period:
-            period: month
-            count: 3
+          arguments:
+            timestamp_column: review_creation_date
+            training_period:
+              period: month
+              count: 3
 
       # -- Freshness: detect data delivery delays --
       - elementary.freshness_anomalies:
-          timestamp_column: review_creation_date
-          training_period:
-            period: month
-            count: 3
+          arguments:
+            timestamp_column: review_creation_date
+            training_period:
+              period: month
+              count: 3
 
     columns:
       - name: review_id
