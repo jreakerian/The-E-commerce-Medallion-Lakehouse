@@ -1,0 +1,96 @@
+version: 2
+
+semantic_models:
+  - name: fct_customer_reviews_semantic
+    model: ref('fct_customer_reviews')
+    defaults:
+      agg_time_dimension: review_creation_date
+    entities:
+      - name: review_id
+        type: primary
+      - name: order_id
+        type: foreign
+    dimensions:
+      - name: order_status
+        type: categorical
+      - name: review_creation_date
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: review_count
+        expr: review_id
+        agg: count
+      # Counts reviews with score <= 2 (1-star or 2-star = dissatisfied customer).
+      - name: negative_reviews_count
+        expr: case when review_score <= 2 then 1 else 0 end
+        agg: sum
+      - name: review_score_sum
+        expr: review_score
+        agg: sum
+
+metrics:
+  - name: total_reviews
+    label: Total Reviews
+    description: "Total number of customer reviews submitted."
+    type: simple
+    type_params:
+      measure: review_count
+
+  - name: negative_reviews
+    label: Negative Reviews
+    description: "Count of reviews with a score of 1 or 2 stars."
+    type: simple
+    type_params:
+      measure: negative_reviews_count
+
+  - name: negative_review_rate
+    label: Negative Review Rate
+    description: >
+      Percentage of reviews that are 1-star or 2-star. This is the primary
+      quality control signal for the marketplace. High rates at the category
+      or seller level indicate systematic product quality issues or logistics
+      failures and should trigger merchant review or offboarding.
+    type: ratio
+    type_params:
+      numerator: negative_reviews
+      denominator: total_reviews
+
+  - name: review_score_total
+    label: Review Score Total
+    description: "Sum of all review scores. Used internally as the numerator for average_review_score."
+    type: simple
+    type_params:
+      measure: review_score_sum
+
+  - name: average_review_score
+    label: Average Review Score
+    description: >
+      Average customer review score (scale of 1 to 5). Complements the
+      negative_review_rate by capturing the full distribution of satisfaction,
+      not just the tail of dissatisfied customers.
+    type: ratio
+    type_params:
+      numerator: review_score_total
+      denominator: total_reviews
+
+
+saved_queries:
+  - name: daily_review_quality
+    label: "Daily Review Quality"
+    description: >
+      Pre-built daily breakdown of review volume and quality KPIs.
+      Exported as a Snowflake table for BI tools and quality dashboards.
+    query_params:
+      metrics:
+        - total_reviews
+        - negative_review_rate
+        - average_review_score
+      group_by:
+        - TimeDimension('metric_time', 'DAY')
+        - Dimension('review_id__order_status')
+    exports:
+      - name: daily_review_quality
+        config:
+          export_as: table
+          schema: "{{ 'prod_gold' if target.name == 'prod' else 'dev_gold' }}"
