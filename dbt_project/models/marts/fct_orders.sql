@@ -39,6 +39,7 @@ final AS (
         orders.order_status,
         orders.order_purchase_timestamp,
         orders.order_delivered_customer_date,
+        orders.order_estimated_delivery_date,
         COALESCE(orders_items.total_price, 0) AS total_price,
         COALESCE(orders_items.total_freight_value, 0) AS total_freight_value,
         COALESCE(orders_items.number_of_items, 0) AS number_of_items,
