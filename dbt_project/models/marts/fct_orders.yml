@@ -64,6 +64,10 @@ models:
         data_type: timestamp_ntz
         description: "Timestamp when the order was delivered to the customer."
 
+      - name: order_estimated_delivery_date
+        data_type: timestamp_ntz
+        description: "Estimated delivery date for the order from Olist at purchase time."
+
       - name: total_price
         data_type: number(10,2)
         description: "Sum of item prices for the order."
