@@ -23,13 +23,12 @@ select * from snowflake.reviews_summary
 
 ```sql top_cities_retention
 select
-    customer_unique_id__customer_city   as city,
-    sum(total_customers)                as total_customers,
-    sum(returning_customers)            as returning_customers,
-    sum(total_customers * repeat_customer_rate) / nullif(sum(total_customers), 0)
-                                        as repeat_rate
+    customer_city                                                                   as city,
+    sum(total_customers)                                                            as total_customers,
+    sum(returning_customers)                                                        as returning_customers,
+    sum(total_customers * repeat_customer_rate) / nullif(sum(total_customers), 0)  as repeat_rate
 from snowflake.customer_retention
-where customer_unique_id__customer_city is not null
+where customer_city is not null
 group by 1
 order by total_customers desc
 limit 20
