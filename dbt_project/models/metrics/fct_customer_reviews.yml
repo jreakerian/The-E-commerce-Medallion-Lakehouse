@@ -84,6 +84,7 @@ saved_queries:
     query_params:
       metrics:
         - total_reviews
+        - negative_reviews
         - negative_review_rate
         - average_review_score
       group_by:
