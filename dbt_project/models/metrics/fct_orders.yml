@@ -122,10 +122,12 @@ saved_queries:
     query_params:
       metrics:
         - total_orders
+        - delivered_orders
         - total_revenue
         - average_order_value
         - fulfillment_rate
         - average_fulfillment_days
+        - late_deliveries
         - late_delivery_rate
       group_by:
         - TimeDimension('metric_time', 'DAY')
