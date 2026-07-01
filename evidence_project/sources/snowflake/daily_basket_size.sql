@@ -3,4 +3,8 @@
 --   numerator  → total_items_sold  (fct_order_items_semantic)
 --   denominator → total_orders     (fct_orders_semantic)
 -- It can only be grouped by shared time dimensions, hence its own export table.
-SELECT * FROM OLIST_LAKEHOUSE_PROD.PROD_GOLD.daily_basket_size
+SELECT
+    metric_time__day    AS metric_time,
+    average_basket_size
+FROM OLIST_LAKEHOUSE_PROD.PROD_GOLD.daily_basket_size
+ORDER BY metric_time
