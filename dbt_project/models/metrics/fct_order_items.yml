@@ -64,6 +64,7 @@ saved_queries:
       metrics:
         - total_items_sold
         - total_gmv
+        - average_basket_size
       group_by:
         - TimeDimension('metric_time', 'DAY')
         - Entity('order_item_id__product_id')
